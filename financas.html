@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Finanças · Evolução Pessoal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1018;
+      --panel: #0f1724;
+      --panel-2: #111a2a;
+      --border: rgba(255,255,255,0.08);
+      --accent: #25c099;
+      --accent-2: #4ee4c3;
+      --text: #f6f7fb;
+      --muted: #9db1c9;
+      --warning: #f6c344;
+      --danger: #ff6b6b;
+      --shadow: 0 20px 60px rgba(0,0,0,0.45);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Space Grotesk", "Manrope", system-ui, sans-serif;
+      background: radial-gradient(140% 140% at 20% 20%, rgba(37,192,153,0.12), transparent 40%),
+                  radial-gradient(130% 130% at 80% 0%, rgba(78,228,195,0.12), transparent 45%),
+                  #05070d;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      letter-spacing: 0.02em;
+    }
+
+    header {
+      padding: 48px 18px 22px;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(37,192,153,0.12);
+      color: var(--accent);
+      border: 1px solid rgba(37,192,153,0.4);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+
+    h1 { margin: 16px 0 10px; font-size: clamp(32px, 4vw, 46px); line-height: 1.05; }
+    p.lead { margin: 0; max-width: 820px; color: var(--muted); font-size: 17px; line-height: 1.6; }
+
+    .hero-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 24px; }
+
+    main { flex: 1; width: 100%; padding: 0 18px 46px; }
+    section { max-width: 1200px; margin: 0 auto 18px; }
+
+    .panel {
+      background: linear-gradient(145deg, rgba(16,23,36,0.96), rgba(14,18,30,0.98));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .panel-title h2 { margin: 0; font-size: 20px; }
+    .panel-title span { color: var(--muted); font-size: 14px; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .stat-card { background: var(--panel-2); border: 1px solid var(--border); border-radius: 14px; padding: 14px; display: grid; gap: 6px; }
+    .stat-label { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .stat-value { font-size: 28px; font-weight: 700; }
+    .stat-sub { color: var(--muted); font-size: 13px; }
+
+    .progress-bar { width: 100%; height: 8px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; border: 1px solid var(--border); }
+    .progress-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); width: 0%; transition: width 200ms ease; }
+
+    .flex { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); color: var(--muted); font-size: 13px; }
+
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    button, .btn { cursor: pointer; border: 1px solid var(--border); background: linear-gradient(135deg, rgba(37,192,153,0.12), rgba(78,228,195,0.12)); color: var(--text); border-radius: 12px; padding: 10px 14px; font-weight: 700; transition: transform 140ms ease, border-color 140ms ease; text-decoration: none; }
+    button:hover, .btn:hover { transform: translateY(-1px); border-color: rgba(78,228,195,0.8); }
+    .btn-ghost { background: rgba(255,255,255,0.02); }
+    .btn-danger { border-color: rgba(255,107,107,0.4); color: #ff9f9f; }
+
+    .input, select, textarea { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; border-radius: 12px; font-size: 14px; }
+
+    .form-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .form-row { display: grid; gap: 6px; }
+    .mini-title { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 6px; }
+
+    .table { width: 100%; border-collapse: collapse; }
+    .table th, .table td { padding: 10px 8px; border-bottom: 1px solid var(--border); text-align: left; }
+    .table th { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .table td { color: var(--text); font-size: 14px; }
+
+    .bar-row { display: grid; grid-template-columns: 110px 1fr 80px; gap: 8px; align-items: center; }
+    .bar { height: 10px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); overflow: hidden; }
+    .bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); width: 0%; }
+
+    .pill { padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: var(--muted); font-size: 12px; }
+
+    @media (max-width: 768px) {
+      header { padding-top: 32px; }
+      .bar-row { grid-template-columns: 1fr; }
+      .bar-row .bar { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="tag">Painel de Finanças</div>
+    <h1>Controle diário, distribuição automática e checklist financeiro</h1>
+    <p class="lead">Registre gastos e faturamentos, veja distribuição automática (dízimo, oferta, investimentos), acompanhe saldo/patrimônio e marque checklist de ações financeiras que contam para ofensiva.</p>
+
+    <div class="hero-grid">
+      <div class="panel">
+        <div class="panel-title"><h2>Registro rápido</h2><span>Gastos e faturamento</span></div>
+        <div class="form-grid">
+          <div class="form-row">
+            <label class="mini-title" for="valor">Valor</label>
+            <input class="input" id="valor" type="number" step="0.01" placeholder="0.00" />
+          </div>
+          <div class="form-row">
+            <label class="mini-title" for="tipo">Tipo</label>
+            <select id="tipo" class="input">
+              <option value="gasto">Gasto</option>
+              <option value="receita">Receita</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="mini-title" for="data">Data</label>
+            <input class="input" id="data" type="date" />
+          </div>
+          <div class="form-row">
+            <label class="mini-title" for="descricao">Descrição (opcional)</label>
+            <input class="input" id="descricao" placeholder="Ex.: Mercado, Freelance" />
+          </div>
+        </div>
+        <div class="actions" style="margin-top:12px;">
+          <button id="salvar">Salvar lançamento</button>
+          <button class="btn-ghost" id="limpar">Limpar</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h2>Filtro</h2><span>Período para os dados</span></div>
+        <div class="actions">
+          <button data-period="hoje" class="btn-ghost period-btn">Hoje</button>
+          <button data-period="7d" class="btn-ghost period-btn">Últimos 7 dias</button>
+          <button data-period="mes" class="btn-ghost period-btn">Mês atual</button>
+          <button data-period="geral" class="btn-ghost period-btn">Geral</button>
+        </div>
+        <p class="stat-sub" id="period-label">Período: Hoje</p>
+        <div class="chip">Checklist de dízimo/oferta conta para ofensiva; demais são metas financeiras normais.</div>
+        <div class="actions" style="margin-top:10px;">
+          <button class="btn-danger" id="reset-dados">Apagar dados financeiros</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h2>Checklist financeiro</h2><span>Gerado a partir do último faturamento</span></div>
+        <div id="checklist" class="flex"></div>
+        <div class="actions" style="margin-top:10px;">
+          <button class="btn-ghost" id="reset-checklist">Resetar checklist</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="panel-title"><h2>Resumo</h2><span id="period-resumo">Hoje</span></div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Faturamento</div>
+          <div class="stat-value" id="stat-receita">R$ 0,00</div>
+          <div class="stat-sub">Total no período filtrado</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Gastos</div>
+          <div class="stat-value" id="stat-gasto">R$ 0,00</div>
+          <div class="stat-sub">Total no período filtrado</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Saldo</div>
+          <div class="stat-value" id="stat-saldo">R$ 0,00</div>
+          <div class="stat-sub">Faturamento - Gastos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Patrimônio acumulado</div>
+          <div class="stat-value" id="stat-patrimonio">R$ 0,00</div>
+          <div class="stat-sub">Histórico completo (todas as datas)</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title"><h2>Distribuição automática (último faturamento)</h2><span>10% dízimo, oferta fixa 100, 20% investimentos (16/3/1)</span></div>
+      <div id="dist-ultimo" class="stats-grid"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title"><h2>Distribuição acumulada</h2><span>Com base em todas as receitas</span></div>
+      <div class="meta-list" id="dist-acumulada"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title"><h2>Gastos e faturamentos</h2><span>Histórico no período filtrado</span></div>
+      <div class="table-wrap">
+        <table class="table" id="tabela-hist">
+          <thead>
+            <tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Valor</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title"><h2>Gráfico simples</h2><span>Totais no período</span></div>
+      <div class="bar-row">
+        <div class="stat-label">Faturamento</div>
+        <div class="bar"><span id="bar-receita"></span></div>
+        <div class="stat-value" id="bar-receita-val">R$ 0</div>
+      </div>
+      <div class="bar-row">
+        <div class="stat-label">Gastos</div>
+        <div class="bar"><span id="bar-gasto"></span></div>
+        <div class="stat-value" id="bar-gasto-val">R$ 0</div>
+      </div>
+      <div class="bar-row">
+        <div class="stat-label">Saldo</div>
+        <div class="bar"><span id="bar-saldo"></span></div>
+        <div class="stat-value" id="bar-saldo-val">R$ 0</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="panel" style="max-width:1200px; margin: 0 auto 32px;">
+    <div class="panel-title"><h2>Regras financeiras</h2><span>Resumo</span></div>
+    <ul style="color: var(--muted); line-height: 1.6; padding-left: 18px; margin: 0;">
+      <li>Receita: 10% dízimo, oferta fixa 100, 20% para investimentos (16% reserva, 3% moderado, 1% arriscado).</li>
+      <li>Checklist: dízimo e oferta contam para ofensiva; demais são metas financeiras sem quebra.</li>
+      <li>Períodos: Hoje, últimos 7 dias, mês atual ou geral.</li>
+      <li>Dados ficam no navegador (localStorage); para produção, conectar a backend/BD.</li>
+    </ul>
+  </footer>
+
+  <script>
+    const storageKeyFin = "evolucao-financas-v1";
+    const periodButtons = document.querySelectorAll(".period-btn");
+
+    const loadState = () => {
+      const saved = localStorage.getItem(storageKeyFin);
+      if (saved) return JSON.parse(saved);
+      return { lancamentos: [] };
+    };
+
+    let state = loadState();
+    let currentPeriod = "hoje";
+
+    const persist = () => localStorage.setItem(storageKeyFin, JSON.stringify(state));
+
+    const fmt = (n) => `R$ ${Number(n || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    const todayKey = (d = new Date()) => d.toISOString().slice(0,10);
+
+    const isToday = (d) => todayKey(d) === todayKey(new Date());
+    const isWithinDays = (d, days) => {
+      const now = new Date();
+      const diff = (now - d) / 86400000;
+      return diff >= 0 && diff < days;
+    };
+    const isSameMonth = (d) => {
+      const now = new Date();
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    };
+
+    const filtered = () => {
+      return state.lancamentos.filter(item => {
+        const d = new Date(item.data);
+        if (currentPeriod === "hoje") return isToday(d);
+        if (currentPeriod === "7d") return isWithinDays(d, 7);
+        if (currentPeriod === "mes") return isSameMonth(d);
+        return true;
+      }).sort((a,b) => new Date(b.data) - new Date(a.data));
+    };
+
+    const sumBy = (items, fn) => items.reduce((acc, it) => acc + fn(it), 0);
+
+    const distribution = (valor) => {
+      const v = Number(valor || 0);
+      const dizimo = v * 0.10;
+      const oferta = 100;
+      const inv = v * 0.20;
+      const reserva = v * 0.16;
+      const moderado = v * 0.03;
+      const arriscado = v * 0.01;
+      return { dizimo, oferta, reserva, moderado, arriscado, livre: v - (dizimo + oferta + inv) };
+    };
+
+    const lastReceita = () => state.lancamentos.filter(l => l.tipo === "receita").sort((a,b)=> new Date(b.data) - new Date(a.data))[0];
+
+    const renderResumo = () => {
+      const items = filtered();
+      const receita = sumBy(items.filter(i=>i.tipo==="receita"), i=>Number(i.valor));
+      const gasto = sumBy(items.filter(i=>i.tipo==="gasto"), i=>Number(i.valor));
+      const saldo = receita - gasto;
+      const patrimonio = sumBy(state.lancamentos.filter(i=>i.tipo==="receita"), i=>Number(i.valor)) - sumBy(state.lancamentos.filter(i=>i.tipo==="gasto"), i=>Number(i.valor));
+      document.getElementById("stat-receita").textContent = fmt(receita);
+      document.getElementById("stat-gasto").textContent = fmt(gasto);
+      document.getElementById("stat-saldo").textContent = fmt(saldo);
+      document.getElementById("stat-patrimonio").textContent = fmt(patrimonio);
+      document.getElementById("period-label").textContent = `Período: ${labelPeriodo(currentPeriod)}`;
+      document.getElementById("period-resumo").textContent = labelPeriodo(currentPeriod);
+      renderBars(receita, gasto, saldo);
+    };
+
+    const renderBars = (receita, gasto, saldo) => {
+      const max = Math.max(receita, gasto, Math.abs(saldo), 1);
+      document.getElementById("bar-receita").style.width = `${Math.min(100, (receita/max)*100)}%`;
+      document.getElementById("bar-gasto").style.width = `${Math.min(100, (gasto/max)*100)}%`;
+      document.getElementById("bar-saldo").style.width = `${Math.min(100, (Math.abs(saldo)/max)*100)}%`;
+      document.getElementById("bar-receita-val").textContent = fmt(receita);
+      document.getElementById("bar-gasto-val").textContent = fmt(gasto);
+      document.getElementById("bar-saldo-val").textContent = fmt(saldo);
+    };
+
+    const renderTable = () => {
+      const tbody = document.querySelector("#tabela-hist tbody");
+      tbody.innerHTML = "";
+      filtered().forEach(item => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${new Date(item.data).toLocaleDateString("pt-BR")}</td><td>${item.tipo}</td><td>${item.desc || "-"}</td><td>${fmt(item.valor)}</td>`;
+        tbody.appendChild(tr);
+      });
+    };
+
+    const renderDistUltimo = () => {
+      const wrap = document.getElementById("dist-ultimo");
+      wrap.innerHTML = "";
+      const lr = lastReceita();
+      if (!lr) { wrap.innerHTML = '<div class="stat-sub">Nenhum faturamento registrado ainda.</div>'; return; }
+      const d = distribution(lr.valor);
+      const items = [
+        { label: "Dízimo (10%)", val: d.dizimo },
+        { label: "Oferta (100)", val: d.oferta },
+        { label: "Reserva (16%)", val: d.reserva },
+        { label: "Invest. moderado (3%)", val: d.moderado },
+        { label: "Invest. arriscado (1%)", val: d.arriscado },
+        { label: "Livre", val: d.livre },
+      ];
+      items.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "stat-card";
+        card.innerHTML = `<div class="stat-label">${item.label}</div><div class="stat-value">${fmt(item.val)}</div>`;
+        wrap.appendChild(card);
+      });
+    };
+
+    const renderDistAcumulada = () => {
+      const wrap = document.getElementById("dist-acumulada");
+      wrap.innerHTML = "";
+      const recs = state.lancamentos.filter(l => l.tipo === "receita");
+      const totReceita = sumBy(recs, r => Number(r.valor));
+      if (!recs.length) { wrap.innerHTML = '<div class="stat-sub">Sem receitas registradas.</div>'; return; }
+      const sums = recs.reduce((acc, r) => {
+        const d = distribution(r.valor);
+        acc.dizimo += d.dizimo;
+        acc.oferta += d.oferta;
+        acc.reserva += d.reserva;
+        acc.moderado += d.moderado;
+        acc.arriscado += d.arriscado;
+        acc.livre += d.livre;
+        return acc;
+      }, { dizimo:0, oferta:0, reserva:0, moderado:0, arriscado:0, livre:0 });
+      const rows = [
+        { label: "Dízimo", val: sums.dizimo },
+        { label: "Oferta", val: sums.oferta },
+        { label: "Reserva", val: sums.reserva },
+        { label: "Invest. moderado", val: sums.moderado },
+        { label: "Invest. arriscado", val: sums.arriscado },
+        { label: "Livre", val: sums.livre },
+      ];
+      rows.forEach(r => {
+        const div = document.createElement("div");
+        div.className = "bar-row";
+        div.innerHTML = `<div class="stat-label">${r.label}</div><div class="bar"><span style="width:${Math.min(100, (r.val/Math.max(totReceita,1))*100)}%"></span></div><div class="stat-value">${fmt(r.val)}</div>`;
+        wrap.appendChild(div);
+      });
+    };
+
+    const labelPeriodo = (p) => {
+      if (p === "hoje") return "Hoje";
+      if (p === "7d") return "Últimos 7 dias";
+      if (p === "mes") return "Mês atual";
+      return "Geral";
+    };
+
+    const renderChecklist = () => {
+      const wrap = document.getElementById("checklist");
+      wrap.innerHTML = "";
+      const lr = lastReceita();
+      if (!lr) { wrap.innerHTML = '<span class="stat-sub">Registre uma receita para gerar checklist.</span>'; return; }
+      const tasks = [
+        { key: "dizimo", label: "Separar dízimo" },
+        { key: "oferta", label: "Registrar oferta" },
+        { key: "reserva", label: "Reservar emergência" },
+        { key: "moderado", label: "Invest. moderado" },
+        { key: "arriscado", label: "Invest. arriscado" },
+      ];
+      if (!lr.checklist) lr.checklist = {};
+      tasks.forEach(t => {
+        const btn = document.createElement("button");
+        const done = lr.checklist[t.key];
+        btn.textContent = done ? `✔ ${t.label}` : t.label;
+        btn.className = done ? "btn" : "btn-ghost";
+        btn.onclick = () => { lr.checklist[t.key] = !done; persist(); renderChecklist(); };
+        wrap.appendChild(btn);
+      });
+    };
+
+    const addLancamento = () => {
+      const valor = Number(document.getElementById("valor").value);
+      const tipo = document.getElementById("tipo").value;
+      const data = document.getElementById("data").value || todayKey();
+      const desc = document.getElementById("descricao").value.trim();
+      if (!valor || valor <= 0) { alert("Informe um valor válido."); return; }
+      state.lancamentos.push({ id: `l-${Date.now()}`, valor, tipo, data, desc });
+      persist();
+      renderAll();
+      clearForm();
+    };
+
+    const clearForm = () => {
+      document.getElementById("valor").value = "";
+      document.getElementById("descricao").value = "";
+      document.getElementById("data").value = todayKey();
+      document.getElementById("tipo").value = "gasto";
+    };
+
+    const renderAll = () => {
+      renderResumo();
+      renderTable();
+      renderDistUltimo();
+      renderDistAcumulada();
+      renderChecklist();
+    };
+
+    document.getElementById("salvar").onclick = addLancamento;
+    document.getElementById("limpar").onclick = clearForm;
+    document.getElementById("reset-checklist").onclick = () => {
+      const lr = lastReceita();
+      if (!lr) return;
+      lr.checklist = {};
+      persist();
+      renderChecklist();
+    };
+
+    document.getElementById("reset-dados").onclick = () => {
+      const ok = confirm("Apagar todos os lançamentos financeiros? Esta ação não pode ser desfeita.");
+      if (!ok) return;
+      state = { lancamentos: [] };
+      persist();
+      renderAll();
+    };
+
+    periodButtons.forEach(btn => {
+      btn.onclick = () => { currentPeriod = btn.dataset.period; renderAll(); };
+    });
+
+    // init
+    clearForm();
+    renderAll();
+  </script>
+</body>
+</html>

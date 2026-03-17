@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conquistas · Evolução Pessoal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c111a;
+      --panel: #0f1724;
+      --panel-2: #101827;
+      --border: rgba(255,255,255,0.08);
+      --accent: #26d07c;
+      --accent-2: #5de5d0;
+      --text: #f6f7fb;
+      --muted: #9db1c9;
+      --warning: #f6c344;
+      --danger: #ff6b6b;
+      --shadow: 0 20px 60px rgba(0,0,0,0.45);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Space Grotesk", "Manrope", system-ui, sans-serif;
+      background: radial-gradient(120% 120% at 20% 20%, rgba(38,208,124,0.12), transparent 40%),
+                  radial-gradient(120% 120% at 80% 0%, rgba(93,229,208,0.1), transparent 45%),
+                  #05070d;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      letter-spacing: 0.02em;
+    }
+
+    header { padding: 48px 18px 24px; max-width: 1200px; width: 100%; margin: 0 auto; }
+    main { flex: 1; width: 100%; padding: 0 18px 46px; }
+    section { max-width: 1200px; margin: 0 auto 18px; }
+
+    .tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(38,208,124,0.12); color: var(--accent); border: 1px solid rgba(38,208,124,0.4); border-radius: 999px; padding: 8px 14px; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.08em; }
+    h1 { margin: 16px 0 10px; font-size: clamp(32px, 4vw, 46px); line-height: 1.05; }
+    p.lead { margin: 0; max-width: 820px; color: var(--muted); font-size: 17px; line-height: 1.6; }
+
+    .hero-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 24px; }
+    .panel { background: linear-gradient(145deg, rgba(16,23,36,0.96), rgba(14,18,30,0.98)); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+    .panel-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .panel-title h2 { margin: 0; font-size: 20px; }
+    .panel-title span { color: var(--muted); font-size: 14px; }
+
+    .stat-card { background: var(--panel-2); border: 1px solid var(--border); border-radius: 14px; padding: 14px; display: grid; gap: 6px; }
+    .stat-label { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .stat-value { font-size: 28px; font-weight: 700; }
+    .stat-sub { color: var(--muted); font-size: 13px; }
+
+    .progress-bar { width: 100%; height: 8px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; border: 1px solid var(--border); }
+    .progress-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); width: 0%; transition: width 200ms ease; }
+
+    .flex { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .badge { padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); color: var(--text); font-weight: 700; font-size: 12px; }
+    .badge.active { background: rgba(38,208,124,0.16); border-color: rgba(38,208,124,0.6); color: var(--accent); }
+
+    .offense-circle { position: relative; width: 150px; height: 150px; border-radius: 50%; background: conic-gradient(var(--accent) calc(var(--progress)*1deg), rgba(255,255,255,0.04) 0deg); border: 10px solid rgba(255,255,255,0.04); display: grid; place-items: center; margin: 0 auto; box-shadow: var(--shadow); }
+    .offense-inner { width: 100px; height: 100px; border-radius: 50%; background: var(--panel-2); display: grid; place-items: center; text-align: center; padding: 10px; }
+    .offense-inner strong { font-size: 26px; }
+    .offense-inner span { color: var(--muted); font-size: 13px; }
+
+    .table { width: 100%; border-collapse: collapse; }
+    .table th, .table td { padding: 10px 8px; border-bottom: 1px solid var(--border); text-align: left; }
+    .table th { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .table td { color: var(--text); font-size: 14px; }
+
+    .bar-row { display: grid; grid-template-columns: 110px 1fr 90px; gap: 8px; align-items: center; }
+    .bar { height: 10px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); overflow: hidden; }
+    .bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); width: 0%; }
+
+    .pill { padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: var(--muted); font-size: 12px; }
+
+    .sleep-history { display: grid; gap: 8px; }
+
+    @media (max-width: 768px) {
+      header { padding-top: 32px; }
+      .offense-circle { width: 130px; height: 130px; }
+      .offense-inner { width: 90px; height: 90px; }
+      .bar-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="tag">Painel de Conquistas</div>
+    <h1>Conquistas, medalhas e constância</h1>
+    <p class="lead">Resumo das sequências principais (ofensiva geral e não comer doce), progresso diário e histórico curto. Os dados são lidos do painel de metas e ficam no navegador (localStorage).</p>
+
+    <div class="hero-grid">
+      <div class="panel">
+        <div class="panel-title"><h2>Ofensiva principal</h2><span>Metas que quebram ofensiva</span></div>
+        <div class="flex" style="justify-content: space-between; align-items: center; flex-wrap: wrap;">
+          <div class="offense-circle" id="hero-offense-circle" aria-label="Ofensiva principal">
+            <div class="offense-inner">
+              <strong id="hero-offense">0</strong>
+              <span>dias seguidos</span>
+            </div>
+          </div>
+          <div style="flex:1; min-width:220px;">
+            <p class="mini-title">Medalhas</p>
+            <div class="badges" id="hero-offense-badges"></div>
+            <p class="stat-sub">Zera só se faltar meta obrigatória; lembretes e anuladas não quebram.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><h2>Meta especial: não comer doce</h2><span>Sequência própria</span></div>
+        <div class="stat-card">
+          <div class="stat-label">Sequência</div>
+          <div class="stat-value" id="hero-doce">0</div>
+          <div class="stat-sub">Zera apenas quando marcado como quebrada.</div>
+          <div class="badges" id="hero-doce-badges"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><h2>Progresso de hoje</h2><span>Metas do dia</span></div>
+        <div class="stat-card" style="background: transparent; border: 1px solid var(--border);">
+          <div class="stat-label">Progresso</div>
+          <div class="stat-value" id="hero-progress">0%</div>
+          <div class="progress-bar"><span id="hero-progress-bar"></span></div>
+          <div class="flex" style="margin-top:6px;">
+            <span class="pill">Concluídas: <strong id="hero-done">0</strong></span>
+            <span class="pill">Pendentes: <strong id="hero-pending">0</strong></span>
+            <span class="pill">Anuladas: <strong id="hero-annulled">0</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="panel-title"><h2>Resumo de hoje</h2><span>Metas aplicáveis ao dia</span></div>
+      <div class="flex" style="gap:12px; flex-wrap:wrap;">
+        <div class="stat-card">
+          <div class="stat-label">Metas concluídas</div>
+          <div class="stat-value" id="today-done">0</div>
+          <div class="stat-sub">Contam nos gráficos</div>
+          <div class="progress-bar"><span id="bar-done"></span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pendentes</div>
+          <div class="stat-value" id="today-pending">0</div>
+          <div class="stat-sub">Ainda faltando hoje</div>
+          <div class="progress-bar"><span id="bar-pending"></span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Anuladas</div>
+          <div class="stat-value" id="today-annulled">0</div>
+          <div class="stat-sub">Não contam nem quebram</div>
+          <div class="progress-bar"><span id="bar-annulled"></span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Progresso</div>
+          <div class="stat-value" id="today-progress">0%</div>
+          <div class="stat-sub">Somente metas que contam</div>
+          <div class="progress-bar"><span id="bar-progress"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title"><h2>Histórico rápido (7 dias)</h2><span>Percentual de conclusão</span></div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Dia</th><th>Metas que contam</th><th>Concluídas</th><th>Progresso</th></tr></thead>
+          <tbody id="history-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title"><h2>Metas em uso</h2><span>Totais e origens</span></div>
+      <div class="flex" style="gap:12px; flex-wrap:wrap;">
+        <div class="stat-card">
+          <div class="stat-label">Metas ativas</div>
+          <div class="stat-value" id="meta-total">0</div>
+          <div class="stat-sub">Inclui lembretes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Obrigatórias (quebram)</div>
+          <div class="stat-value" id="meta-breaks">0</div>
+          <div class="stat-sub">Contam para ofensiva</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Lembretes</div>
+          <div class="stat-value" id="meta-reminders">0</div>
+          <div class="stat-sub">Não contam nem quebram</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Origem</div>
+          <div class="stat-sub" id="meta-origins">-</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title"><h2>Medalhas e marcos</h2><span>Ofensiva e doce</span></div>
+      <div class="flex" style="gap:12px; flex-wrap:wrap;">
+        <div class="stat-card" style="flex:1; min-width:260px;">
+          <div class="stat-label">Ofensiva principal</div>
+          <div class="badges" id="badges-offense"></div>
+        </div>
+        <div class="stat-card" style="flex:1; min-width:260px;">
+          <div class="stat-label">Não comer doce</div>
+          <div class="badges" id="badges-doce"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title"><h2>Sono</h2><span>Nota semanal e dias ótimos</span></div>
+      <div class="stat-card" style="margin-bottom:10px;">
+        <div class="stat-label">Nota semanal</div>
+        <div class="stat-value" id="sleep-grade">-</div>
+        <div class="stat-sub">Dias ótimos (≥7.5h): <span id="sleep-good-count">0</span></div>
+      </div>
+      <div class="sleep-history" id="sleep-days"></div>
+    </section>
+  </main>
+
+  <footer class="panel" style="max-width:1200px; margin: 0 auto 32px;">
+    <div class="panel-title"><h2>Notas</h2><span>Leitura somente</span></div>
+    <ul style="color: var(--muted); line-height: 1.6; padding-left: 18px; margin: 0;">
+      <li>Os dados são carregados do localStorage (chave evolucao-metas-v1) usado no painel principal.</li>
+      <li>Nenhuma alteração é gravada por aqui; use a página de metas para marcar ou criar metas.</li>
+      <li>Metas sem recorrência hoje aparecem como pendentes/lembretes padrão para cálculo do histórico.</li>
+    </ul>
+  </footer>
+
+  <script>
+    const storageKey = "evolucao-metas-v1";
+    const weekdayNames = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+    const offenseMilestones = [7, 30, 60, 90, 180, 360];
+    const doceMilestones = [7, 30, 60, 90];
+
+    const ensureShape = (obj) => {
+      if (!obj.entries) obj.entries = {};
+      if (!obj.metas) obj.metas = [];
+      if (!obj.offense) obj.offense = { general: 0 };
+      if (!obj.doce) obj.doce = { streak: 0 };
+      if (!obj.sleep) obj.sleep = { entries: {}, achievements: [] };
+      if (!obj.sleep.entries) obj.sleep.entries = {};
+      if (!obj.sleep.achievements) obj.sleep.achievements = [];
+      return obj;
+    };
+
+    const loadState = () => {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) return ensureShape(JSON.parse(saved));
+      return ensureShape({ metas: [], entries: {}, offense: { general: 0 }, doce: { streak: 0 } });
+    };
+
+    let state = loadState();
+
+    const todayKey = (d = new Date()) => d.toISOString().slice(0,10);
+    const weekday = (d = new Date()) => d.getDay();
+
+    const appliesTo = (meta, wd) => meta.weekdays === "all" || (Array.isArray(meta.weekdays) && meta.weekdays.includes(wd));
+
+    const ensureDayEntries = (dateKey) => {
+      if (!state.entries[dateKey]) state.entries[dateKey] = {};
+      const wd = new Date(dateKey + "T00:00:00").getDay();
+      state.metas.forEach(meta => {
+        if (appliesTo(meta, wd)) {
+          if (!state.entries[dateKey][meta.id]) {
+            state.entries[dateKey][meta.id] = meta.reminder ? "lembrete" : "pendente";
+          }
+        }
+      });
+    };
+
+    const statusCounts = (metas, dateKey) => {
+      const entries = state.entries[dateKey] || {};
+      let done = 0, pending = 0, annulled = 0, totalCounting = 0, doneCounting = 0;
+      metas.forEach(meta => {
+        const st = entries[meta.id] || (meta.reminder ? "lembrete" : "pendente");
+        const counts = meta.counts !== false && st !== "lembrete";
+        if (counts) totalCounting++;
+        if (st === "concluida") {
+          done++;
+          if (counts) doneCounting++;
+        }
+        if (st === "pendente") pending++;
+        if (st === "anulada") annulled++;
+      });
+      const progress = totalCounting === 0 ? 0 : Math.round((doneCounting / totalCounting) * 100);
+      return { done, pending, annulled, progress, totalCounting };
+    };
+
+    const computeOffense = () => {
+      let streak = 0;
+      const today = new Date();
+      for (let i = 0; i < 400; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - i);
+        const key = todayKey(d);
+        const wd = d.getDay();
+        const metasDay = state.metas.filter(m => appliesTo(m, wd) && !m.reminder && m.breaks !== false);
+        if (!metasDay.length) break;
+        ensureDayEntries(key);
+        const entries = state.entries[key] || {};
+        const allDone = metasDay.every(m => {
+          const st = entries[m.id];
+          if (!st) return false;
+          if (st === "concluida") return true;
+          if (st === "anulada") return true;
+          return false;
+        });
+        if (allDone) streak++; else break;
+      }
+      state.offense.general = streak;
+    };
+
+    const computeDoce = () => {
+      const doceMeta = state.metas.find(m => m.special === "doce");
+      if (!doceMeta) { state.doce.streak = 0; return; }
+      let streak = 0;
+      const today = new Date();
+      for (let i = 0; i < 400; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - i);
+        const key = todayKey(d);
+        ensureDayEntries(key);
+        const entries = state.entries[key] || {};
+        const st = entries[doceMeta.id];
+        if (st === "concluida") { streak++; continue; }
+        if (st === "fail-doce" || st === "quebrada") { break; }
+        if (!st) break;
+        if (st === "anulada") { streak++; continue; }
+        break;
+      }
+      state.doce.streak = streak;
+    };
+
+    const renderBadges = (container, milestones, value) => {
+      container.innerHTML = "";
+      milestones.forEach(m => {
+        const el = document.createElement("span");
+        el.className = "badge" + (value >= m ? " active" : "");
+        el.textContent = `${m}d`;
+        container.appendChild(el);
+      });
+    };
+
+    const renderHero = () => {
+      computeOffense();
+      computeDoce();
+      document.getElementById("hero-offense").textContent = state.offense.general;
+      const circle = document.getElementById("hero-offense-circle");
+      circle.style.setProperty("--progress", Math.min(360, state.offense.general));
+      renderBadges(document.getElementById("hero-offense-badges"), offenseMilestones, state.offense.general);
+      document.getElementById("hero-doce").textContent = state.doce.streak;
+      renderBadges(document.getElementById("hero-doce-badges"), doceMilestones, state.doce.streak);
+    };
+
+    const renderToday = () => {
+      const today = todayKey();
+      ensureDayEntries(today);
+      const metasToday = state.metas.filter(m => appliesTo(m, weekday()));
+      const stats = statusCounts(metasToday, today);
+      document.getElementById("today-done").textContent = stats.done;
+      document.getElementById("today-pending").textContent = stats.pending;
+      document.getElementById("today-annulled").textContent = stats.annulled;
+      document.getElementById("today-progress").textContent = `${stats.progress}%`;
+      document.getElementById("bar-done").style.width = `${Math.min(100, (stats.done/Math.max(1, metasToday.length))*100)}%`;
+      document.getElementById("bar-pending").style.width = `${Math.min(100, (stats.pending/Math.max(1, metasToday.length))*100)}%`;
+      document.getElementById("bar-annulled").style.width = `${Math.min(100, (stats.annulled/Math.max(1, metasToday.length))*100)}%`;
+      document.getElementById("bar-progress").style.width = `${stats.progress}%`;
+
+      document.getElementById("hero-progress").textContent = `${stats.progress}%`;
+      document.getElementById("hero-progress-bar").style.width = `${stats.progress}%`;
+      document.getElementById("hero-done").textContent = stats.done;
+      document.getElementById("hero-pending").textContent = stats.pending;
+      document.getElementById("hero-annulled").textContent = stats.annulled;
+    };
+
+    const renderHistory = () => {
+      const tbody = document.getElementById("history-body");
+      tbody.innerHTML = "";
+      const now = new Date();
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(now);
+        d.setDate(now.getDate() - i);
+        const key = todayKey(d);
+        ensureDayEntries(key);
+        const metasDay = state.metas.filter(m => appliesTo(m, d.getDay()));
+        const stats = statusCounts(metasDay, key);
+        const tr = document.createElement("tr");
+        const progress = stats.totalCounting === 0 ? 0 : Math.round((stats.done / stats.totalCounting) * 100);
+        tr.innerHTML = `<td>${d.toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit" })}</td><td>${stats.totalCounting}</td><td>${stats.done}</td><td>${progress}%</td>`;
+        tbody.appendChild(tr);
+      }
+    };
+
+    const renderMetaCounts = () => {
+      const total = state.metas.length;
+      const breaks = state.metas.filter(m => m.breaks !== false && !m.reminder).length;
+      const reminders = state.metas.filter(m => m.reminder).length;
+      const byOrigin = state.metas.reduce((acc, m) => {
+        const o = m.origin || "geral";
+        acc[o] = (acc[o] || 0) + 1;
+        return acc;
+      }, {});
+      const originsText = Object.keys(byOrigin).length ? Object.entries(byOrigin).map(([o,v]) => `${o}: ${v}`).join(" · ") : "-";
+      document.getElementById("meta-total").textContent = total;
+      document.getElementById("meta-breaks").textContent = breaks;
+      document.getElementById("meta-reminders").textContent = reminders;
+      document.getElementById("meta-origins").textContent = originsText;
+    };
+
+    const renderSleep = () => {
+      const entries = Object.entries(state.sleep.entries || {}).map(([date, hours]) => ({ date, hours: Number(hours) })).sort((a,b)=> new Date(b.date) - new Date(a.date));
+      const now = new Date();
+      const last7 = entries.filter(i => (now - new Date(i.date)) / 86400000 <= 6);
+      const avg7 = last7.length ? last7.reduce((s,i)=>s+i.hours,0)/last7.length : 0;
+      const grade = avg7 >= 7.5 ? "Muito bom" : avg7 >= 6.5 ? "Ok" : "Crítico";
+      document.getElementById("sleep-grade").textContent = grade;
+      const goodDays = (state.sleep.achievements || []).sort((a,b)=> new Date(b.date) - new Date(a.date));
+      document.getElementById("sleep-good-count").textContent = goodDays.length;
+      const list = document.getElementById("sleep-days");
+      list.innerHTML = "";
+      if (!goodDays.length) { list.innerHTML = '<span class="stat-sub">Sem dias marcados como muito bom ainda.</span>'; return; }
+      goodDays.slice(0,7).forEach(d => {
+        const row = document.createElement("div");
+        row.className = "bar-row";
+        row.innerHTML = `
+          <div class="stat-label">${new Date(d.date).toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit" })}</div>
+          <div class="bar"><span style="width:${Math.min(100, (Number(d.hours)/9)*100)}%"></span></div>
+          <div class="stat-value">${Number(d.hours).toFixed(1)}h</div>
+        `;
+        list.appendChild(row);
+      });
+    };
+
+    const renderBadgesPanels = () => {
+      renderBadges(document.getElementById("badges-offense"), offenseMilestones, state.offense.general);
+      renderBadges(document.getElementById("badges-doce"), doceMilestones, state.doce.streak);
+    };
+
+    const reloadState = () => {
+      state = loadState();
+      renderAll();
+    };
+
+    const renderAll = () => {
+      renderHero();
+      renderToday();
+      renderHistory();
+      renderMetaCounts();
+      renderBadgesPanels();
+      renderSleep();
+    };
+
+    window.addEventListener("storage", (e) => {
+      if (e.key === storageKey) reloadState();
+    });
+
+    setInterval(reloadState, 30000);
+
+    renderAll();
+  </script>
+</body>
+</html>

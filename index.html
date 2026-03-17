@@ -1,0 +1,1714 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Metas · Evolução Pessoal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c111a;
+      --panel: #0f1724;
+      --panel-2: #101827;
+      --border: rgba(255,255,255,0.08);
+      --accent: #26d07c;
+      --accent-2: #5de5d0;
+      --text: #f6f7fb;
+      --muted: #9db1c9;
+      --warning: #f6c344;
+      --danger: #ff6b6b;
+      --shadow: 0 20px 60px rgba(0,0,0,0.45);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Space Grotesk", "Manrope", system-ui, sans-serif;
+      background: linear-gradient(180deg, #eaf6ff 0%, #d6ecff 40%, #c1ddff 100%);
+      background-image:
+        radial-gradient(ellipse at 20% 18%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 48%),
+        radial-gradient(ellipse at 65% 12%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 52%),
+        radial-gradient(ellipse at 40% 32%, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 46%),
+        radial-gradient(ellipse at 78% 36%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 50%),
+        linear-gradient(180deg, #eaf6ff 0%, #d6ecff 40%, #c1ddff 100%);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      letter-spacing: 0.02em;
+    }
+
+    header {
+      padding: 48px 18px 24px;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(38,208,124,0.12);
+      color: var(--accent);
+      border: 1px solid rgba(38,208,124,0.4);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      margin: 16px 0 10px;
+      font-size: clamp(32px, 4vw, 46px);
+      line-height: 1.05;
+      color: #0c2f23;
+    }
+
+    p.lead {
+      margin: 0;
+      max-width: 820px;
+      color: #1b3145;
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+      padding: 0 18px 46px;
+    }
+
+    section {
+      max-width: 1200px;
+      margin: 0 auto 18px;
+    }
+
+    .panel {
+      background: linear-gradient(145deg, rgba(16,23,36,0.96), rgba(14,18,30,0.98));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .panel-title h2 { margin: 0; font-size: 20px; }
+    .panel-title span { color: var(--muted); font-size: 14px; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .stat-card {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .stat-label { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .stat-value { font-size: 28px; font-weight: 700; }
+    .stat-sub { color: var(--muted); font-size: 13px; }
+
+    .progress-bar { width: 100%; height: 8px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; border: 1px solid var(--border); }
+    .progress-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); width: 0%; transition: width 200ms ease; }
+
+    .flex { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid #9fb8d4;
+      background: #f3f8ff;
+      color: #0f2c1e;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    button, .btn {
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(38,208,124,0.12), rgba(93,229,208,0.12));
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 700;
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+      text-decoration: none;
+    }
+    button:hover, .btn:hover { transform: translateY(-1px); border-color: rgba(93,229,208,0.8); }
+
+    .hero-actions button,
+    .hero-actions .btn,
+    .hero-actions .btn-ghost {
+      background: linear-gradient(135deg, #0f2c1e, #0c2f23);
+      color: #f7fff9;
+      border-color: #8fdcb8;
+      box-shadow: 0 10px 24px rgba(15,44,30,0.18);
+    }
+    .hero-actions .btn-ghost { background: #0f2c1e; }
+    .hero-actions button:hover,
+    .hero-actions .btn:hover,
+    .hero-actions .btn-ghost:hover {
+      transform: translateY(-1px);
+      border-color: #5acb9b;
+      background: linear-gradient(135deg, #0d271c, #0a2217);
+    }
+
+    .input, select, textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+
+    .meta-list { display: grid; gap: 10px; }
+    .meta-card {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+      position: relative;
+    }
+    .meta-card.done .meta-title { text-decoration: line-through; color: var(--muted); }
+    .meta-card.done .meta-desc { color: var(--muted); }
+    .meta-card.broken .meta-title { text-decoration: line-through; color: var(--danger); }
+    .meta-card.broken .meta-desc { color: #ff9f9f; }
+    .meta-header { display: flex; align-items: center; gap: 10px; justify-content: space-between; flex-wrap: wrap; }
+    .meta-title { font-weight: 700; font-size: 18px; margin: 0; }
+    .meta-desc { color: var(--muted); margin: 0; line-height: 1.5; }
+    .meta-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .pill { padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: var(--muted); font-size: 12px; }
+
+    .meta-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .meta-actions button { padding: 8px 12px; border-radius: 10px; font-weight: 700; border: 1px solid var(--border); background: rgba(255,255,255,0.04); }
+    .btn-danger { border-color: rgba(255,107,107,0.4); color: #ff9797; }
+    .btn-ghost { background: rgba(255,255,255,0.02); }
+
+    .meta-title.btn-link {
+      cursor: pointer;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-decoration-color: rgba(38,208,124,0.6);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5,7,13,0.55);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 999;
+    }
+    .modal-card {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: min(700px, 100%);
+      max-height: 90vh;
+      overflow: auto;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .modal-card .panel-title { margin-top: 0; }
+
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+    .status-pendente { background: #f6c344; box-shadow: 0 0 0 6px rgba(246,195,68,0.12); }
+    .status-concluida { background: #26d07c; box-shadow: 0 0 0 6px rgba(38,208,124,0.12); }
+    .status-anulada { background: #7c8da5; box-shadow: 0 0 0 6px rgba(124,141,165,0.18); }
+    .status-lembrete { background: #9db1c9; box-shadow: 0 0 0 6px rgba(157,177,201,0.15); }
+    .status-fail { background: #ff6b6b; box-shadow: 0 0 0 6px rgba(255,107,107,0.18); }
+    .status-quebrada { background: #ff6b6b; box-shadow: 0 0 0 6px rgba(255,107,107,0.18); }
+
+    .offense-circle {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent) calc(var(--progress)*1deg), rgba(255,255,255,0.04) 0deg);
+      border: 10px solid rgba(255,255,255,0.04);
+      display: grid;
+      place-items: center;
+      margin: 0 auto;
+      box-shadow: var(--shadow);
+    }
+    .offense-inner { width: 110px; height: 110px; border-radius: 50%; background: var(--panel-2); display: grid; place-items: center; text-align: center; padding: 10px; }
+    .offense-inner strong { font-size: 26px; }
+    .offense-inner span { color: var(--muted); font-size: 13px; }
+
+    .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .badge { padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); color: var(--text); font-weight: 700; font-size: 12px; }
+    .badge.active { background: rgba(38,208,124,0.16); border-color: rgba(38,208,124,0.6); color: var(--accent); }
+
+    .timer {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      display: grid;
+      gap: 6px;
+      text-align: center;
+    }
+    .timer strong { font-size: 28px; letter-spacing: 0.08em; }
+    .timer span { color: var(--muted); font-size: 13px; }
+
+    .form-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .form-row { display: grid; gap: 6px; }
+    .weekdays { display: flex; gap: 6px; flex-wrap: wrap; }
+    .weekday-btn { padding: 8px 10px; border-radius: 10px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); color: var(--text); cursor: pointer; font-weight: 700; }
+    .weekday-btn.active { background: rgba(38,208,124,0.14); border-color: rgba(38,208,124,0.6); color: var(--accent); }
+
+    .filters { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+    .mini-title { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 6px; }
+
+    .sleep-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .sleep-card { background: var(--panel-2); border: 1px solid var(--border); border-radius: 14px; padding: 14px; display: grid; gap: 8px; }
+    .sleep-bar { height: 10px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); overflow: hidden; }
+    .sleep-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); width: 0%; }
+    .sleep-history { display: grid; gap: 8px; }
+    .sleep-good { color: var(--accent); font-weight: 700; }
+
+    .fin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .table { width: 100%; border-collapse: collapse; }
+    .table th, .table td { padding: 10px 8px; border-bottom: 1px solid var(--border); text-align: left; }
+    .table th { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .table td { color: var(--text); font-size: 14px; }
+    .bar-row { display: grid; grid-template-columns: 110px 1fr 90px; gap: 8px; align-items: center; }
+    .bar { height: 10px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); overflow: hidden; }
+    .bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); width: 0%; }
+
+    /* Themed sections */
+    .section-metas {
+      background: linear-gradient(145deg, rgba(232,255,242,0.9), rgba(214,247,229,0.9));
+      border: 1px solid #c6f3dd;
+      color: #0f2c1e;
+      box-shadow: 0 18px 40px rgba(21,119,78,0.18);
+    }
+    .section-metas .panel-title h2,
+    .section-metas .panel-title span,
+    .section-metas .stat-label,
+    .section-metas .stat-sub { color: #0f2c1e; }
+    .section-metas .stat-value { color: #0a422b; }
+    .section-metas .stat-card,
+    .section-metas .meta-card,
+    .section-metas .panel,
+    .section-metas .sleep-card {
+      background: #f9fffb;
+      border: 1px solid #b9ebd3;
+      color: #0f2c1e;
+    }
+    .section-metas .mini-title,
+    .section-metas label,
+    .section-metas .chip,
+    .section-metas .pill { color: #164030; }
+    .section-metas .chip,
+    .section-metas .pill { background: #e8fff2; border-color: #b9ebd3; }
+    .section-metas .input,
+    .section-metas select,
+    .section-metas textarea {
+      background: #f1fff7;
+      border-color: #b9ebd3;
+      color: #0f2c1e;
+    }
+    .section-metas .meta-actions button,
+    .section-metas button,
+    .section-metas .btn,
+    .section-metas .btn-ghost {
+      border-color: #8fdcb8;
+      background: linear-gradient(135deg, rgba(38,208,124,0.2), rgba(93,229,208,0.12));
+      color: #0a422b;
+    }
+
+    .section-sono {
+      background: linear-gradient(145deg, #0d1f3b, #0b162a);
+      border: 1px solid rgba(91,178,255,0.22);
+      box-shadow: 0 18px 40px rgba(11,22,42,0.55);
+    }
+    .section-sono .panel-title h2,
+    .section-sono .panel-title span { color: #c9e2ff; }
+    .section-sono .sleep-card {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(91,178,255,0.3);
+    }
+    .section-sono .stat-card { background: rgba(255,255,255,0.02); border-color: rgba(91,178,255,0.26); }
+    .section-sono .mini-title { color: #a9cfff; }
+
+    .section-financas {
+      background: linear-gradient(145deg, rgba(255,249,216,0.95), rgba(255,243,189,0.95));
+      border: 1px solid #f0e2a6;
+      color: #3f3000;
+      box-shadow: 0 18px 40px rgba(199,156,18,0.2);
+    }
+    .section-financas .panel-title h2,
+    .section-financas .panel-title span,
+    .section-financas .stat-label,
+    .section-financas .stat-sub { color: #3f3000; }
+    .section-financas .stat-value { color: #2c2100; }
+    .section-financas .panel,
+    .section-financas .stat-card,
+    .section-financas .sleep-card,
+    .section-financas .meta-card {
+      background: #fffef5;
+      border: 1px solid #f0e2a6;
+      color: #3f3000;
+    }
+    .section-financas .mini-title,
+    .section-financas label,
+    .section-financas .chip,
+    .section-financas .pill { color: #4a3a00; }
+    .section-financas .chip,
+    .section-financas .pill { background: #fff8dc; border-color: #e7d48f; }
+    .section-financas .input,
+    .section-financas select,
+    .section-financas textarea {
+      background: #fffaf0;
+      border-color: #f0e2a6;
+      color: #3f3000;
+    }
+    .section-financas button,
+    .section-financas .btn,
+    .section-financas .btn-ghost {
+      border-color: #e2c15a;
+      background: linear-gradient(135deg, rgba(255,217,102,0.35), rgba(255,201,71,0.18));
+      color: #3f3000;
+    }
+    .section-financas .btn-danger { border-color: rgba(255,107,107,0.35); color: #7a1200; }
+
+    @media (max-width: 768px) {
+      header { padding-top: 32px; }
+      .offense-circle { width: 140px; height: 140px; }
+      .offense-inner { width: 100px; height: 100px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="tag">Painel de Vida · Metas</div>
+    <h1 id="hero-title">Olá, ZUKOWSKI.</h1>
+    <p class="lead" id="hero-lead">Configurando mensagem dinâmica...</p>
+
+    <div class="actions hero-actions" style="margin-top:12px;">
+      <a class="btn" href="conquistas.html">Ir para Conquistas</a>
+      <button class="btn-ghost" id="btn-export">Exportar backup</button>
+      <button class="btn-ghost" id="btn-import">Importar backup</button>
+      <span class="chip" id="save-status">Salvo no navegador</span>
+      <input type="file" id="backup-file" accept="application/json" style="display:none;" />
+    </div>
+
+    <div class="hero-grid">
+      <div class="panel">
+        <div class="panel-title"><h2>Timer até meia-noite</h2><span>Renova checklist automaticamente</span></div>
+        <div class="timer">
+          <strong id="countdown">--:--:--</strong>
+          <span>Tempo restante para concluir as metas de hoje</span>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h2>Ofensiva principal</h2><span></span></div>
+        <div class="flex" style="justify-content: space-between; align-items: center; flex-wrap: wrap;">
+          <div class="offense-circle" aria-label="Ofensiva principal">
+            <div class="offense-inner">
+              <strong id="offense-streak">0</strong>
+              <span>dias seguidos</span>
+            </div>
+          </div>
+          <div style="flex:1; min-width: 220px;"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h2>Meta especial: não comer doce</h2><span></span></div>
+        <div class="stat-card">
+          <div class="stat-label">Sequência</div>
+          <div class="stat-value" id="doce-streak">0</div>
+          <div class="stat-sub">Dias seguidos sem comer doce.</div>
+          <div class="actions">
+            <button id="btn-no-doce" aria-label="Marcar que não comeu doce">Não comi hoje</button>
+            <button class="btn-danger" id="btn-comi-doce" aria-label="Marcar que comeu doce">Comi doce (zera)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel section-metas" style="margin-bottom:20px;">
+      <div class="panel-title">
+        <h2>Resumo de hoje</h2>
+        <span id="today-label">Hoje</span>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Metas concluídas</div>
+          <div class="stat-value" id="stat-done">0</div>
+          <div class="stat-sub">Contam no total e nos gráficos</div>
+          <div class="progress-bar"><span id="bar-done"></span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pendentes</div>
+          <div class="stat-value" id="stat-pending">0</div>
+          <div class="stat-sub">Ainda faltando hoje</div>
+          <div class="progress-bar"><span id="bar-pending"></span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Anuladas</div>
+          <div class="stat-value" id="stat-annulled">0</div>
+          <div class="stat-sub">Não contam nem zeram ofensiva</div>
+          <div class="progress-bar"><span id="bar-annulled"></span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Progresso diário</div>
+          <div class="stat-value" id="stat-progress">0%</div>
+          <div class="stat-sub">Somente metas que contam</div>
+          <div class="progress-bar"><span id="bar-progress"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel section-metas" style="margin-bottom:20px;">
+      <div class="panel-title">
+        <h2>Gerenciar metas</h2>
+        <span>Crie, edite, conclua, anule ou delete</span>
+      </div>
+      <div class="meta-list" id="meta-list"></div>
+
+      <div class="filters" style="margin-top:14px;">
+        <div class="form-row">
+          <label class="mini-title" for="filter-status">Status</label>
+          <select id="filter-status" class="input">
+            <option value="all">Todos</option>
+            <option value="pendente">Pendentes</option>
+            <option value="concluida">Concluídas</option>
+            <option value="anulada">Anuladas</option>
+            <option value="lembrete">Lembretes</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="mini-title" for="filter-origem">Origem</label>
+          <select id="filter-origem" class="input">
+            <option value="all">Todas</option>
+            <option value="geral">Geral</option>
+            <option value="sono">Sono</option>
+            <option value="financas">Finanças</option>
+            <option value="especial">Especial</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="mini-title" for="filter-lembretes">Lembretes</label>
+          <select id="filter-lembretes" class="input">
+            <option value="incluir">Incluir lembretes</option>
+            <option value="somente">Somente lembretes</option>
+            <option value="ocultar">Ocultar lembretes</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="actions" style="margin-top:12px; margin-bottom:12px;">
+        <button id="toggle-form">Nova meta</button>
+        <button class="btn-ghost" id="reset-day">Resetar metas de hoje</button>
+      </div>
+    <div id="form-wrapper" class="modal-overlay">
+      <div class="modal-card">
+        <div class="panel-title"><h2 id="form-title">Criar meta</h2><span>Configure recorrência e regras de ofensiva</span></div>
+        <form id="meta-form">
+          <input type="hidden" id="meta-id" />
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="mini-title" for="meta-nome">Nome</label>
+              <input class="input" id="meta-nome" placeholder="Ex.: Devoção matinal" required />
+            </div>
+            <div class="form-row">
+              <label class="mini-title" for="meta-desc">Descrição</label>
+              <input class="input" id="meta-desc" placeholder="Detalhes rápidos" />
+            </div>
+            <div class="form-row">
+              <label class="mini-title" for="meta-tipo">Tipo</label>
+              <select id="meta-tipo" class="input">
+                <option value="diaria">Diária</option>
+                <option value="semanal">Semanal</option>
+                <option value="mensal">Mensal</option>
+                <option value="avulsa">Data específica</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label class="mini-title" for="meta-origem">Origem</label>
+              <select id="meta-origem" class="input">
+                <option value="geral">Geral</option>
+                <option value="sono">Sono</option>
+                <option value="financas">Finanças</option>
+                <option value="especial">Especial</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row" style="margin-top:10px;">
+            <label class="mini-title">Dias da semana</label>
+            <div class="weekdays" id="weekday-buttons"></div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-row">
+              <label><input type="checkbox" id="meta-conta" checked /> Conta no total</label>
+              <label><input type="checkbox" id="meta-ofensiva" checked /> Quebra ofensiva se não feita</label>
+            </div>
+            <div class="form-row">
+              <label><input type="checkbox" id="meta-anulavel" checked /> Pode ser anulada</label>
+              <label><input type="checkbox" id="meta-lembrete" /> É lembrete (não conta)</label>
+            </div>
+          </div>
+
+          <div class="actions" style="margin-top:12px; justify-content: flex-end;">
+            <button type="button" class="btn-ghost" id="btn-cancel">Cancelar</button>
+            <button type="submit" id="btn-save">Salvar meta</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="meta-detail-modal" class="modal-overlay">
+      <div class="modal-card">
+        <div class="panel-title"><h2 id="detail-title">Meta</h2><span id="detail-status"></span></div>
+        <div id="detail-body" style="display:grid; gap:10px;">
+          <!-- filled dynamically -->
+        </div>
+        <div class="actions" style="margin-top:12px; justify-content:flex-end;">
+          <button type="button" class="btn-ghost" id="detail-close">Fechar</button>
+        </div>
+      </div>
+    </div>
+    </section>
+
+    <section class="panel section-sono" style="margin-bottom:20px;">
+      <div class="panel-title"><h2>Sono e rotina matinal</h2><span>Registre horas dormidas e marque devoção/alongamento</span></div>
+      <div class="sleep-grid">
+        <div class="sleep-card">
+          <p class="mini-title">Registrar sono</p>
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="mini-title" for="sleep-hours">Horas dormidas</label>
+              <input class="input" id="sleep-hours" type="number" step="0.1" min="0" max="24" placeholder="7.5" />
+            </div>
+            <div class="form-row">
+              <label class="mini-title" for="sleep-date">Data</label>
+              <input class="input" id="sleep-date" type="date" />
+            </div>
+          </div>
+          <div class="actions" style="margin-top:10px;">
+            <button id="sleep-save">Salvar sono</button>
+            <button class="btn-ghost" id="sleep-clear">Limpar</button>
+          </div>
+        </div>
+
+        <div class="sleep-card">
+          <p class="mini-title">Saúde do sono (7 dias)</p>
+          <div class="stat-card" style="background: transparent; border: 1px solid var(--border);">
+            <div class="stat-label">Nota semanal</div>
+            <div class="stat-value" id="sleep-grade">-</div>
+            <div class="stat-sub">Dias ótimos: <span id="sleep-good-count">0/7</span></div>
+          </div>
+          <div class="sleep-history" id="sleep-week-bars"></div>
+        </div>
+
+        <div class="sleep-card">
+          <p class="mini-title">Médias</p>
+          <div class="stat-card" style="background: transparent; border: 1px solid var(--border);">
+            <div class="stat-label">Últimos 7 dias</div>
+            <div class="stat-value" id="sleep-avg-7">0h</div>
+            <div class="progress-bar"><span id="sleep-bar-7"></span></div>
+          </div>
+          <div class="stat-card" style="background: transparent; border: 1px solid var(--border);">
+            <div class="stat-label">Últimos 30 dias</div>
+            <div class="stat-value" id="sleep-avg-30">0h</div>
+            <div class="progress-bar"><span id="sleep-bar-30"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sleep-card" style="margin-top:12px;">
+        <p class="mini-title">Histórico recente (7 dias)</p>
+        <div class="sleep-history" id="sleep-history"></div>
+      </div>
+    </section>
+
+    <section class="panel section-financas" style="margin-bottom:24px;">
+      <div class="panel-title"><h2>Finanças completas</h2><span>Registro, filtros, checklist e distribuições</span></div>
+
+      <div class="fin-grid">
+        <div class="panel" style="padding:14px;">
+          <div class="panel-title"><h2>Registro rápido</h2><span>Gastos e faturamento</span></div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label class="mini-title" for="fin-valor">Valor</label>
+              <input class="input" id="fin-valor" type="number" step="0.01" placeholder="0.00" />
+            </div>
+            <div class="form-row">
+              <label class="mini-title" for="fin-tipo">Tipo</label>
+              <select id="fin-tipo" class="input">
+                <option value="gasto">Gasto</option>
+                <option value="receita">Receita</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label class="mini-title" for="fin-data">Data</label>
+              <input class="input" id="fin-data" type="date" />
+            </div>
+            <div class="form-row">
+              <label class="mini-title" for="fin-desc">Descrição (opcional)</label>
+              <input class="input" id="fin-desc" placeholder="Ex.: Mercado, Freelance" />
+            </div>
+          </div>
+          <div class="actions" style="margin-top:12px;">
+            <button id="fin-salvar">Salvar lançamento</button>
+            <button class="btn-ghost" id="fin-limpar">Limpar</button>
+          </div>
+        </div>
+
+        <div class="panel" style="padding:14px;">
+          <div class="panel-title"><h2>Filtro</h2><span>Período para os dados</span></div>
+          <div class="actions">
+            <button data-period="hoje" class="btn-ghost fin-period">Hoje</button>
+            <button data-period="7d" class="btn-ghost fin-period">Últimos 7 dias</button>
+            <button data-period="mes" class="btn-ghost fin-period">Mês atual</button>
+            <button data-period="geral" class="btn-ghost fin-period">Geral</button>
+          </div>
+          <p class="stat-sub" id="fin-period-label">Período: Hoje</p>
+          <div class="chip">Checklist de dízimo/oferta conta para ofensiva; demais são metas financeiras normais.</div>
+          <div class="actions" style="margin-top:10px;">
+            <button class="btn-danger" id="fin-reset">Apagar dados financeiros</button>
+          </div>
+        </div>
+
+        <div class="panel" style="padding:14px;">
+          <div class="panel-title"><h2>Checklist financeiro</h2><span>Gerado do último faturamento</span></div>
+          <div id="fin-checklist" class="flex"></div>
+          <div class="actions" style="margin-top:10px;">
+            <button class="btn-ghost" id="fin-reset-check">Resetar checklist</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:14px;">
+        <div class="panel-title"><h2>Resumo</h2><span id="fin-period-resumo">Hoje</span></div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Faturamento</div>
+            <div class="stat-value" id="fin-receita">R$ 0,00</div>
+            <div class="stat-sub">Total no período filtrado</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Gastos</div>
+            <div class="stat-value" id="fin-gasto">R$ 0,00</div>
+            <div class="stat-sub">Total no período filtrado</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Saldo</div>
+            <div class="stat-value" id="fin-saldo">R$ 0,00</div>
+            <div class="stat-sub">Faturamento - Gastos</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Patrimônio acumulado</div>
+            <div class="stat-value" id="fin-patrimonio">R$ 0,00</div>
+            <div class="stat-sub">Histórico completo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:14px;">
+        <div class="panel-title"><h2>Distribuição do último faturamento</h2><span>10% dízimo, oferta 100, 20% invest (16/3/1)</span></div>
+        <div id="fin-dist-ultimo" class="stats-grid"></div>
+      </div>
+
+      <div class="panel" style="margin-top:14px;">
+        <div class="panel-title"><h2>Distribuição acumulada</h2><span>Com base em todas as receitas</span></div>
+        <div id="fin-dist-acumulada" class="meta-list"></div>
+      </div>
+
+      <div class="panel" style="margin-top:14px;">
+        <div class="panel-title"><h2>Histórico</h2><span>Período filtrado</span></div>
+        <div class="table-wrap">
+          <table class="table" id="fin-tabela">
+            <thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Valor</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:14px;">
+        <div class="panel-title"><h2>Barras rápidas</h2><span>Totais no período</span></div>
+        <div class="bar-row"><div class="stat-label">Faturamento</div><div class="bar"><span id="fin-bar-receita"></span></div><div class="stat-value" id="fin-bar-receita-val">R$ 0</div></div>
+        <div class="bar-row"><div class="stat-label">Gastos</div><div class="bar"><span id="fin-bar-gasto"></span></div><div class="stat-value" id="fin-bar-gasto-val">R$ 0</div></div>
+        <div class="bar-row"><div class="stat-label">Saldo</div><div class="bar"><span id="fin-bar-saldo"></span></div><div class="stat-value" id="fin-bar-saldo-val">R$ 0</div></div>
+      </div>
+
+      <div class="panel" style="margin-top:14px;">
+        <div class="panel-title"><h2>Regras financeiras</h2><span>Resumo</span></div>
+        <ul style="color: var(--muted); line-height: 1.6; padding-left: 18px; margin: 0;">
+          <li>Receita: 10% dízimo, oferta fixa 100, 20% para investimentos (16% reserva, 3% moderado, 1% arriscado).</li>
+          <li>Checklist: dízimo e oferta contam para ofensiva; demais são metas financeiras sem quebra.</li>
+          <li>Períodos: Hoje, últimos 7 dias, mês atual ou geral.</li>
+          <li>Dados ficam no navegador (localStorage); para produção, conectar a backend/BD.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel section-metas" style="margin-bottom:20px;">
+      <div class="panel-title"><h2>Agenda semanal padrão</h2><span>Pré-carregada com a rotina que você descreveu</span></div>
+      <div id="template-view" class="meta-list"></div>
+    </section>
+  </main>
+
+  <footer class="panel" style="max-width:1200px; margin: 0 auto 32px;">
+    <div class="panel-title"><h2>Regras principais</h2><span>Resumo rápido</span></div>
+    <ul style="color: var(--muted); line-height: 1.6; padding-left: 18px; margin: 0;">
+      <li>Meta concluída conta nos totais e gráficos apenas se marcada para contar.</li>
+      <li>Meta anulada não conta, não zera ofensiva e fica registrada.</li>
+      <li>Lembretes não contam no total e não afetam ofensiva.</li>
+      <li>Ofensiva geral zera somente se faltar meta obrigatória que quebra ofensiva.</li>
+      <li>Meta “não comer doce” tem ofensiva própria e não zera a geral.</li>
+    </ul>
+  </footer>
+
+  <script>
+    const weekdayNames = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+    const offenseMilestones = [7, 30, 60, 90, 180, 360];
+    const doceMilestones = [7, 30, 60, 90];
+    const userName = "ZUKOWSKI";
+
+    const seedTemplates = () => ([
+      { title: "Devocional", desc: "Checklist matinal", weekdays: [0,1,2,3,4,5,6], origin: "sono", counts: true, breaks: true },
+      { title: "Alongamento", desc: "5-10 minutos", weekdays: [0,1,2,3,4,5,6], origin: "sono", counts: true, breaks: true },
+      { title: "Não comer doce", desc: "Meta especial diária", weekdays: [0,1,2,3,4,5,6], origin: "especial", counts: false, breaks: false, special: "doce" },
+      { title: "Clube de desbravadores", desc: "Domingo", weekdays: [0], origin: "geral", counts: true, breaks: true },
+      { title: "Treinar violino", desc: "Domingo", weekdays: [0], origin: "geral", counts: true, breaks: true },
+      { title: "Ler livro", desc: "Domingo, quinta, sábado", weekdays: [0,4,6], origin: "geral", counts: true, breaks: true },
+      { title: "Aula de violino", desc: "Segunda", weekdays: [1], origin: "geral", counts: true, breaks: true },
+      { title: "Verificar trabalhos da faculdade", desc: "Lembrete, não conta ofensiva", weekdays: [1], origin: "geral", counts: false, breaks: false, reminder: true },
+      { title: "Treino de basquete", desc: "Segunda e sexta", weekdays: [1,5], origin: "geral", counts: true, breaks: true },
+      { title: "Aula/treino de piano", desc: "Terça", weekdays: [2], origin: "geral", counts: true, breaks: true },
+      { title: "Aula de boxe", desc: "Terça e quinta", weekdays: [2,4], origin: "geral", counts: true, breaks: true },
+      { title: "Estudo de violino", desc: "Quarta", weekdays: [3], origin: "geral", counts: true, breaks: true },
+      { title: "Atividade do clube", desc: "Quinta", weekdays: [4], origin: "geral", counts: true, breaks: true },
+      { title: "Treinar piano", desc: "Quinta", weekdays: [4], origin: "geral", counts: true, breaks: true },
+      { title: "Ir ao culto", desc: "Sexta", weekdays: [5], origin: "geral", counts: true, breaks: true },
+      { title: "Tocar violino", desc: "Sexta", weekdays: [5], origin: "geral", counts: true, breaks: true },
+    ]);
+
+    const storageKey = "evolucao-metas-v1";
+    const storageKeyFin = "evolucao-financas-v1";
+    const backupKey = "evolucao-backup-v1";
+
+    function safeParse(raw) {
+      try { return raw ? JSON.parse(raw) : null; } catch (e) { console.warn("Falha ao ler storage", e); return null; }
+    }
+
+    function loadBackup() {
+      const raw = safeParse(localStorage.getItem(backupKey));
+      return raw && typeof raw === "object" ? raw : null;
+    }
+
+    function saveBackup() {
+      try { localStorage.setItem(backupKey, JSON.stringify({ state, finState })); } catch (e) { console.warn("Backup local falhou", e); }
+    }
+
+    const updateSaveStatus = (ok = true) => {
+      const el = document.getElementById("save-status");
+      if (!el) return;
+      el.textContent = ok ? "Salvo no navegador" : "Erro ao salvar";
+    };
+
+    const greetingByHour = (h) => {
+      if (h >= 5 && h < 12) return {
+        title: `Bom dia, ${userName}. Friday online.`,
+        lead: "Café, metas calibradas e ofensiva armada. Vamos abrir o dia?",
+      };
+      if (h >= 12 && h < 18) return {
+        title: `Boa tarde, ${userName}. Friday em modo missão.`,
+        lead: "Redirecionando foco: metas, sono e finanças sincronizados. Próximo passo?",
+      };
+      if (h >= 18 && h < 23) return {
+        title: `Boa noite, ${userName}. Friday já ajustou o painel.`,
+        lead: "Hora de fechar ciclos, ganhar a ofensiva e garantir o streak. Sinal verde?",
+      };
+      return {
+        title: `Turno noturno ativo, ${userName}.`,
+        lead: "Modo vigia: monitorando metas antes da meia-noite. Qual prioridade agora?",
+      };
+    };
+
+    const applyGreeting = () => {
+      const h = new Date().getHours();
+      const { title, lead } = greetingByHour(h);
+      const titleEl = document.getElementById("hero-title");
+      const leadEl = document.getElementById("hero-lead");
+      if (titleEl) titleEl.textContent = title;
+      if (leadEl) leadEl.textContent = lead;
+    };
+
+    const ensureShape = (obj) => {
+      if (!obj.entries) obj.entries = {};
+      if (!obj.metas) obj.metas = [];
+      if (!obj.offense) obj.offense = { general: 0 };
+      if (!obj.doce) obj.doce = { streak: 0 };
+      if (!obj.sleep) obj.sleep = { entries: {} };
+      if (!obj.sleep.entries) obj.sleep.entries = {};
+      if (!obj.sleep.achievements) obj.sleep.achievements = [];
+      return obj;
+    };
+
+    const ensureFinShape = (obj) => {
+      if (!obj.lancamentos) obj.lancamentos = [];
+      return obj;
+    };
+
+    const loadState = () => {
+      const saved = safeParse(localStorage.getItem(storageKey));
+      if (saved) return ensureShape(saved);
+      const backup = loadBackup();
+      if (backup && backup.state) return ensureShape(backup.state);
+      const templates = seedTemplates().map((t, idx) => ({
+        id: `seed-${idx}`,
+        title: t.title,
+        desc: t.desc,
+        weekdays: t.weekdays,
+        origin: t.origin,
+        counts: t.counts,
+        breaks: t.breaks,
+        reminder: !!t.reminder,
+        annulable: true,
+        type: "diaria",
+        special: t.special || null,
+      }));
+      return ensureShape({ metas: templates, entries: {}, offense: { general: 0 }, doce: { streak: 0 }, lastReset: null });
+    };
+
+    let state = loadState();
+    let finState = ensureFinShape(safeParse(localStorage.getItem(storageKeyFin)) || (loadBackup() || {}).finState || {});
+    let finPeriod = "hoje";
+
+    const persist = () => {
+      try { localStorage.setItem(storageKey, JSON.stringify(state)); saveBackup(); updateSaveStatus(true); }
+      catch (e) { console.warn("Erro ao salvar metas", e); updateSaveStatus(false); }
+    };
+    const persistFin = () => {
+      try { localStorage.setItem(storageKeyFin, JSON.stringify(finState)); saveBackup(); updateSaveStatus(true); }
+      catch (e) { console.warn("Erro ao salvar finanças", e); updateSaveStatus(false); }
+    };
+
+    const todayKey = (d = new Date()) => d.toISOString().slice(0,10);
+    const weekday = (d = new Date()) => d.getDay();
+
+    const exportBackup = () => {
+      const data = JSON.stringify({ state, finState }, null, 2);
+      const blob = new Blob([data], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `evolucao-backup-${todayKey()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    const importBackupFile = (file) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const payload = JSON.parse(reader.result);
+          if (payload.state) state = ensureShape(payload.state);
+          if (payload.finState) finState = ensureFinShape(payload.finState);
+          persist();
+          persistFin();
+          render();
+          finRenderAll();
+          alert("Backup importado com sucesso.");
+        } catch (e) {
+          console.warn("Backup inválido", e);
+          alert("Não foi possível importar: arquivo inválido.");
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    const ensureDayEntries = (dateKey) => {
+      if (!state.entries[dateKey]) state.entries[dateKey] = {};
+      const wd = new Date(dateKey + "T00:00:00").getDay();
+      state.metas.forEach(meta => {
+        if (appliesTo(meta, wd)) {
+          if (!state.entries[dateKey][meta.id]) {
+            state.entries[dateKey][meta.id] = meta.reminder ? "lembrete" : "pendente";
+          }
+        }
+      });
+    };
+
+    const appliesTo = (meta, wd) => meta.weekdays === "all" || (Array.isArray(meta.weekdays) && meta.weekdays.includes(wd));
+
+    const setStatus = (metaId, status, dateKey = todayKey()) => {
+      ensureDayEntries(dateKey);
+      state.entries[dateKey][metaId] = status;
+      persist();
+      render();
+    };
+
+    const resetToday = () => {
+      state.entries[todayKey()] = {};
+      ensureDayEntries(todayKey());
+      persist();
+      render();
+    };
+
+    const statusCounts = (metas, dateKey) => {
+      const entries = state.entries[dateKey] || {};
+      let done = 0, pending = 0, annulled = 0, totalCounting = 0, doneCounting = 0;
+      metas.forEach(meta => {
+        const st = entries[meta.id] || (meta.reminder ? "lembrete" : "pendente");
+        const counts = meta.counts && st !== "lembrete";
+        if (counts) totalCounting++;
+        if (st === "concluida") {
+          done++;
+          if (counts) doneCounting++;
+        }
+        if (st === "pendente") pending++;
+        if (st === "anulada") annulled++;
+      });
+      const progress = totalCounting === 0 ? 0 : Math.round((doneCounting / totalCounting) * 100);
+      return { done, pending, annulled, progress, totalCounting };
+    };
+
+    const computeOffense = () => {
+      let streak = 0;
+      const today = new Date();
+      for (let i = 0; i < 400; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - i);
+        const key = todayKey(d);
+        const wd = d.getDay();
+        const metasDay = state.metas.filter(m => appliesTo(m, wd) && !m.reminder && m.breaks);
+        if (!metasDay.length) break;
+        const entries = state.entries[key] || {};
+        const allDone = metasDay.every(m => {
+          const st = entries[m.id];
+          if (!st) return false;
+          if (st === "concluida") return true;
+          if (st === "anulada") return true;
+          return false;
+        });
+        if (allDone) streak++;
+        else break;
+      }
+      state.offense.general = streak;
+    };
+
+    const computeDoce = () => {
+      const doceMeta = state.metas.find(m => m.special === "doce");
+      if (!doceMeta) return state.doce.streak = 0;
+      let streak = 0;
+      const today = new Date();
+      for (let i = 0; i < 400; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - i);
+        const key = todayKey(d);
+        const entries = state.entries[key] || {};
+        const st = entries[doceMeta.id];
+        if (st === "concluida") { streak++; continue; }
+        if (st === "fail-doce" || st === "quebrada") { break; }
+        if (!st) break;
+        if (st === "anulada") { streak++; continue; }
+        break;
+      }
+      state.doce.streak = streak;
+    };
+
+    const percent = (val) => Math.min(100, Math.max(0, val));
+
+    const renderBadges = (container, milestones, value) => {
+      container.innerHTML = "";
+      milestones.forEach(m => {
+        const el = document.createElement("span");
+        el.className = "badge" + (value >= m ? " active" : "");
+        el.textContent = `${m}d`;
+        container.appendChild(el);
+      });
+    };
+
+    const renderTemplateView = () => {
+      const wrap = document.getElementById("template-view");
+      wrap.innerHTML = "";
+      const grouped = {};
+      state.metas.forEach(meta => {
+        (meta.weekdays || []).forEach(wd => {
+          if (!grouped[wd]) grouped[wd] = [];
+          grouped[wd].push(meta);
+        });
+      });
+      Object.keys(grouped).sort((a,b)=>a-b).forEach(day => {
+        const card = document.createElement("div");
+        card.className = "meta-card";
+        const title = document.createElement("div");
+        title.className = "meta-title";
+        title.textContent = `${weekdayNames[day]} · ${grouped[day].length} metas padrão`;
+        card.appendChild(title);
+        const tags = document.createElement("div");
+        tags.className = "meta-tags";
+        grouped[day].forEach(meta => {
+          const pill = document.createElement("span");
+          pill.className = "pill";
+          pill.textContent = meta.title;
+          tags.appendChild(pill);
+        });
+        card.appendChild(tags);
+        wrap.appendChild(card);
+      });
+    };
+
+    const renderMetas = () => {
+      const list = document.getElementById("meta-list");
+      list.innerHTML = "";
+      const wd = weekday();
+      const metasToday = state.metas.filter(m => appliesTo(m, wd));
+      ensureDayEntries(todayKey());
+      const entries = state.entries[todayKey()];
+
+      const filterStatus = document.getElementById("filter-status").value;
+      const filterOrigem = document.getElementById("filter-origem").value;
+      const filterLembretes = document.getElementById("filter-lembretes").value;
+
+      metasToday
+        .filter(meta => {
+          const st = entries[meta.id];
+          if (filterOrigem !== "all" && meta.origin !== filterOrigem) return false;
+          if (filterStatus !== "all" && st !== filterStatus) return false;
+          if (filterLembretes === "ocultar" && meta.reminder) return false;
+          if (filterLembretes === "somente" && !meta.reminder) return false;
+          return true;
+        })
+        .sort((a, b) => {
+          const order = { "concluida": 2, "quebrada": 1 };
+          const sa = entries[a.id] || "pendente";
+          const sb = entries[b.id] || "pendente";
+          return (order[sa] || 0) - (order[sb] || 0);
+        })
+        .forEach(meta => {
+          const st = entries[meta.id];
+          const card = document.createElement("div");
+          card.className = "meta-card" + (st === "concluida" ? " done" : st === "quebrada" ? " broken" : "");
+
+          const header = document.createElement("div");
+          header.className = "meta-header";
+          const title = document.createElement("p");
+          title.className = "meta-title btn-link";
+          const statusClass = st === "fail-doce" ? "quebrada" : st;
+          title.innerHTML = `<span class="status-dot status-${statusClass}"></span>${meta.title}`;
+          title.onclick = () => openMetaDetail(meta, st);
+          header.appendChild(title);
+
+          const actions = document.createElement("div");
+          actions.className = "meta-actions";
+          const btnDone = document.createElement("button");
+          btnDone.textContent = "Concluir";
+          btnDone.onclick = () => setStatus(meta.id, "concluida");
+          const btnPending = document.createElement("button");
+          btnPending.className = "btn-ghost";
+          btnPending.textContent = "Pendente";
+          btnPending.onclick = () => setStatus(meta.id, meta.reminder ? "lembrete" : "pendente");
+          const btnAnnul = document.createElement("button");
+          btnAnnul.textContent = "Anular";
+          btnAnnul.onclick = () => meta.annulable ? setStatus(meta.id, "anulada") : null;
+          actions.append(btnDone, btnPending, btnAnnul);
+          header.appendChild(actions);
+          card.appendChild(header);
+
+          list.appendChild(card);
+        });
+    };
+
+    const openMetaDetail = (meta, status) => {
+      const modal = document.getElementById("meta-detail-modal");
+      const body = document.getElementById("detail-body");
+      const statusLabel = status === "concluida" ? "Concluída" : status === "pendente" ? "Pendente" : status === "anulada" ? "Anulada" : status === "lembrete" ? "Lembrete" : status === "quebrada" ? "Quebrada" : status || "Pendente";
+      document.getElementById("detail-title").textContent = meta.title;
+      document.getElementById("detail-status").textContent = statusLabel;
+      const days = Array.isArray(meta.weekdays) ? meta.weekdays.map(i => weekdayNames[i]).join(", ") : "Todos";
+      body.innerHTML = `
+        <div><strong>Descrição:</strong> ${meta.desc || "-"}</div>
+        <div><strong>Origem:</strong> ${meta.origin || "-"}</div>
+        <div><strong>Conta no total:</strong> ${meta.counts ? "Sim" : "Não"}</div>
+        <div><strong>Quebra ofensiva:</strong> ${meta.breaks ? "Sim" : "Não"}</div>
+        <div><strong>Lembrete:</strong> ${meta.reminder ? "Sim" : "Não"}</div>
+        <div><strong>Pode anular:</strong> ${meta.annulable ? "Sim" : "Não"}</div>
+        <div><strong>Dias:</strong> ${days}</div>
+      `;
+      modal.style.display = "flex";
+    };
+
+    const loadForm = (meta) => {
+      document.getElementById("form-wrapper").style.display = "flex";
+      document.getElementById("form-title").textContent = meta ? "Editar meta" : "Criar meta";
+      document.getElementById("meta-id").value = meta ? meta.id : "";
+      document.getElementById("meta-nome").value = meta ? meta.title : "";
+      document.getElementById("meta-desc").value = meta ? (meta.desc || "") : "";
+      document.getElementById("meta-tipo").value = meta ? meta.type : "diaria";
+      document.getElementById("meta-origem").value = meta ? meta.origin : "geral";
+      document.getElementById("meta-conta").checked = meta ? meta.counts : true;
+      document.getElementById("meta-ofensiva").checked = meta ? meta.breaks : true;
+      document.getElementById("meta-anulavel").checked = meta ? meta.annulable : true;
+      document.getElementById("meta-lembrete").checked = meta ? meta.reminder : false;
+      setWeekdaySelection(meta ? meta.weekdays : [weekday()]);
+    };
+
+    const deleteMeta = (id) => {
+      state.metas = state.metas.filter(m => m.id !== id);
+      Object.keys(state.entries).forEach(day => { delete state.entries[day][id]; });
+      persist();
+      render();
+    };
+
+    const duplicateMeta = (meta) => {
+      const copy = { ...meta, id: `meta-${Date.now()}`, title: `${meta.title} (cópia)` };
+      state.metas.push(copy);
+      ensureDayEntries(todayKey());
+      persist();
+      render();
+    };
+
+    const setWeekdaySelection = (days) => {
+      const buttons = document.querySelectorAll(".weekday-btn");
+      buttons.forEach(btn => {
+        const day = Number(btn.dataset.day);
+        btn.classList.toggle("active", days.includes(day));
+      });
+    };
+
+    const setupWeekdayButtons = () => {
+      const container = document.getElementById("weekday-buttons");
+      container.innerHTML = "";
+      weekdayNames.forEach((name, idx) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "weekday-btn" + (idx === weekday() ? " active" : "");
+        b.dataset.day = idx;
+        b.textContent = name;
+        b.onclick = () => {
+          b.classList.toggle("active");
+        };
+        container.appendChild(b);
+      });
+    };
+
+    const getSelectedDays = () => {
+      const active = Array.from(document.querySelectorAll(".weekday-btn.active")).map(btn => Number(btn.dataset.day));
+      return active.length ? active : [weekday()];
+    };
+
+    const onSubmitMeta = (e) => {
+      e.preventDefault();
+      const id = document.getElementById("meta-id").value || `meta-${Date.now()}`;
+      const meta = {
+        id,
+        title: document.getElementById("meta-nome").value.trim(),
+        desc: document.getElementById("meta-desc").value.trim(),
+        type: document.getElementById("meta-tipo").value,
+        origin: document.getElementById("meta-origem").value,
+        counts: document.getElementById("meta-conta").checked,
+        breaks: document.getElementById("meta-ofensiva").checked,
+        annulable: document.getElementById("meta-anulavel").checked,
+        reminder: document.getElementById("meta-lembrete").checked,
+        weekdays: getSelectedDays(),
+        special: null,
+      };
+      const existing = state.metas.findIndex(m => m.id === id);
+      if (existing >= 0) state.metas[existing] = meta; else state.metas.push(meta);
+      ensureDayEntries(todayKey());
+      persist();
+      render();
+      document.getElementById("meta-form").reset();
+      setupWeekdayButtons();
+      document.getElementById("form-wrapper").style.display = "none";
+    };
+
+    const renderStats = () => {
+      const metasToday = state.metas.filter(m => appliesTo(m, weekday()));
+      ensureDayEntries(todayKey());
+      const stats = statusCounts(metasToday, todayKey());
+      document.getElementById("stat-done").textContent = stats.done;
+      document.getElementById("stat-pending").textContent = stats.pending;
+      document.getElementById("stat-annulled").textContent = stats.annulled;
+      document.getElementById("stat-progress").textContent = `${stats.progress}%`;
+      document.getElementById("bar-done").style.width = `${percent(stats.done / Math.max(1, metasToday.length) * 100)}%`;
+      document.getElementById("bar-pending").style.width = `${percent(stats.pending / Math.max(1, metasToday.length) * 100)}%`;
+      document.getElementById("bar-annulled").style.width = `${percent(stats.annulled / Math.max(1, metasToday.length) * 100)}%`;
+      document.getElementById("bar-progress").style.width = `${stats.progress}%`;
+    };
+
+    const renderOffense = () => {
+      computeOffense();
+      computeDoce();
+      const offense = state.offense.general;
+      const el = document.getElementById("offense-streak");
+      el.textContent = offense;
+      const circle = document.querySelector(".offense-circle");
+      circle.style.setProperty("--progress", Math.min(360, offense));
+      const badgesOff = document.getElementById("offense-badges");
+      if (badgesOff) renderBadges(badgesOff, offenseMilestones, offense);
+      const badgesDoce = document.getElementById("doce-badges");
+      if (badgesDoce) renderBadges(badgesDoce, doceMilestones, state.doce.streak);
+      document.getElementById("doce-streak").textContent = state.doce.streak;
+    };
+
+    const render = () => {
+      ensureDayEntries(todayKey());
+      renderStats();
+      renderMetas();
+      renderOffense();
+      renderSleep();
+      renderTemplateView();
+      document.getElementById("today-label").textContent = new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "short" });
+    };
+
+    const startTimer = () => {
+      const el = document.getElementById("countdown");
+      const tick = () => {
+        const now = new Date();
+        const midnight = new Date();
+        midnight.setHours(24,0,0,0);
+        const diff = midnight - now;
+        if (diff <= 0) {
+          ensureDayEntries(todayKey());
+          render();
+        }
+        const h = String(Math.floor(diff / 1000 / 60 / 60)).padStart(2,"0");
+        const m = String(Math.floor(diff / 1000 / 60) % 60).padStart(2,"0");
+        const s = String(Math.floor(diff / 1000) % 60).padStart(2,"0");
+        el.textContent = `${h}:${m}:${s}`;
+      };
+      tick();
+      setInterval(tick, 1000);
+    };
+
+    document.getElementById("toggle-form").onclick = () => {
+      const wrap = document.getElementById("form-wrapper");
+      wrap.style.display = wrap.style.display === "flex" ? "none" : "flex";
+    };
+    document.getElementById("btn-export").onclick = exportBackup;
+    document.getElementById("btn-import").onclick = () => document.getElementById("backup-file").click();
+    document.getElementById("backup-file").onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) importBackupFile(file);
+      e.target.value = "";
+    };
+    document.getElementById("btn-cancel").onclick = () => {
+      document.getElementById("form-wrapper").style.display = "none";
+    };
+    document.getElementById("form-wrapper").onclick = (e) => {
+      if (e.target.id === "form-wrapper") document.getElementById("form-wrapper").style.display = "none";
+    };
+    document.getElementById("meta-form").onsubmit = onSubmitMeta;
+    document.getElementById("filter-status").onchange = renderMetas;
+    document.getElementById("filter-origem").onchange = renderMetas;
+    document.getElementById("filter-lembretes").onchange = renderMetas;
+    document.getElementById("reset-day").onclick = () => { resetToday(); };
+    document.getElementById("btn-no-doce").onclick = () => {
+      const doceMeta = state.metas.find(m => m.special === "doce");
+      if (!doceMeta) return;
+      setStatus(doceMeta.id, "concluida");
+    };
+    document.getElementById("btn-comi-doce").onclick = () => {
+      const doceMeta = state.metas.find(m => m.special === "doce");
+      if (!doceMeta) return;
+      setStatus(doceMeta.id, "quebrada");
+    };
+
+    // Finanças
+    const fmtMoney = (n) => `R$ ${Number(n || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    const finToday = (d = new Date()) => d.toISOString().slice(0,10);
+    const finIsToday = (d) => finToday(new Date(d)) === finToday(new Date());
+    const finIsWithin = (d, days) => {
+      const now = new Date();
+      return (now - new Date(d)) / 86400000 >= 0 && (now - new Date(d)) / 86400000 < days;
+    };
+    const finIsSameMonth = (d) => {
+      const nd = new Date(d), now = new Date();
+      return nd.getFullYear() === now.getFullYear() && nd.getMonth() === now.getMonth();
+    };
+
+    const finFilter = () => finState.lancamentos
+      .filter(l => {
+        if (finPeriod === "hoje") return finIsToday(l.data);
+        if (finPeriod === "7d") return finIsWithin(l.data, 7);
+        if (finPeriod === "mes") return finIsSameMonth(l.data);
+        return true;
+      })
+      .sort((a,b)=> new Date(b.data) - new Date(a.data));
+
+    const finDistribution = (valor) => {
+      const v = Number(valor || 0);
+      const dizimo = v * 0.10;
+      const oferta = 100;
+      const inv = v * 0.20;
+      const reserva = v * 0.16;
+      const moderado = v * 0.03;
+      const arriscado = v * 0.01;
+      return { dizimo, oferta, reserva, moderado, arriscado, livre: v - (dizimo + oferta + inv) };
+    };
+
+    const finLastReceita = () => finState.lancamentos.filter(l=>l.tipo==="receita").sort((a,b)=> new Date(b.data) - new Date(a.data))[0];
+
+    const finRenderResumo = () => {
+      const items = finFilter();
+      const receita = items.filter(i=>i.tipo==="receita").reduce((s,i)=>s+Number(i.valor),0);
+      const gasto = items.filter(i=>i.tipo==="gasto").reduce((s,i)=>s+Number(i.valor),0);
+      const saldo = receita - gasto;
+      const patrimonio = finState.lancamentos.filter(i=>i.tipo==="receita").reduce((s,i)=>s+Number(i.valor),0) - finState.lancamentos.filter(i=>i.tipo==="gasto").reduce((s,i)=>s+Number(i.valor),0);
+      document.getElementById("fin-receita").textContent = fmtMoney(receita);
+      document.getElementById("fin-gasto").textContent = fmtMoney(gasto);
+      document.getElementById("fin-saldo").textContent = fmtMoney(saldo);
+      document.getElementById("fin-patrimonio").textContent = fmtMoney(patrimonio);
+      document.getElementById("fin-period-label").textContent = `Período: ${finLabel(finPeriod)}`;
+      const resumoLabel = document.getElementById("fin-period-resumo");
+      if (resumoLabel) resumoLabel.textContent = finLabel(finPeriod);
+      finRenderBars(receita, gasto, saldo);
+    };
+
+    const finRenderBars = (rec, gas, sal) => {
+      const max = Math.max(rec, gas, Math.abs(sal), 1);
+      document.getElementById("fin-bar-receita").style.width = `${Math.min(100, rec/max*100)}%`;
+      document.getElementById("fin-bar-gasto").style.width = `${Math.min(100, gas/max*100)}%`;
+      document.getElementById("fin-bar-saldo").style.width = `${Math.min(100, Math.abs(sal)/max*100)}%`;
+      document.getElementById("fin-bar-receita-val").textContent = fmtMoney(rec);
+      document.getElementById("fin-bar-gasto-val").textContent = fmtMoney(gas);
+      document.getElementById("fin-bar-saldo-val").textContent = fmtMoney(sal);
+    };
+
+    const finRenderTable = () => {
+      const tbody = document.querySelector("#fin-tabela tbody");
+      tbody.innerHTML = "";
+      finFilter().forEach(item => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${new Date(item.data).toLocaleDateString("pt-BR")}</td><td>${item.tipo}</td><td>${item.desc || "-"}</td><td>${fmtMoney(item.valor)}</td>`;
+        tbody.appendChild(tr);
+      });
+    };
+
+    const finRenderDistUltimo = () => {
+      const wrap = document.getElementById("fin-dist-ultimo");
+      wrap.innerHTML = "";
+      const lr = finLastReceita();
+      if (!lr) { wrap.innerHTML = '<div class="stat-sub">Nenhum faturamento registrado.</div>'; return; }
+      const d = finDistribution(lr.valor);
+      const items = [
+        { label: "Dízimo (10%)", val: d.dizimo },
+        { label: "Oferta (100)", val: d.oferta },
+        { label: "Reserva (16%)", val: d.reserva },
+        { label: "Invest. moderado (3%)", val: d.moderado },
+        { label: "Invest. arriscado (1%)", val: d.arriscado },
+        { label: "Livre", val: d.livre },
+      ];
+      items.forEach(it => {
+        const card = document.createElement("div");
+        card.className = "stat-card";
+        card.innerHTML = `<div class="stat-label">${it.label}</div><div class="stat-value">${fmtMoney(it.val)}</div>`;
+        wrap.appendChild(card);
+      });
+    };
+
+    const finRenderDistAcumulada = () => {
+      const wrap = document.getElementById("fin-dist-acumulada");
+      wrap.innerHTML = "";
+      const recs = finState.lancamentos.filter(l => l.tipo === "receita");
+      const tot = recs.reduce((s,r)=>s+Number(r.valor),0);
+      if (!recs.length) { wrap.innerHTML = '<div class="stat-sub">Sem receitas registradas.</div>'; return; }
+      const sums = recs.reduce((acc, r) => {
+        const d = finDistribution(r.valor);
+        acc.dizimo += d.dizimo;
+        acc.oferta += d.oferta;
+        acc.reserva += d.reserva;
+        acc.moderado += d.moderado;
+        acc.arriscado += d.arriscado;
+        acc.livre += d.livre;
+        return acc;
+      }, { dizimo:0, oferta:0, reserva:0, moderado:0, arriscado:0, livre:0 });
+      const rows = [
+        { label: "Dízimo", val: sums.dizimo },
+        { label: "Oferta", val: sums.oferta },
+        { label: "Reserva", val: sums.reserva },
+        { label: "Invest. moderado", val: sums.moderado },
+        { label: "Invest. arriscado", val: sums.arriscado },
+        { label: "Livre", val: sums.livre },
+      ];
+      rows.forEach(r => {
+        const div = document.createElement("div");
+        div.className = "bar-row";
+        const pct = Math.min(100, (r.val/Math.max(tot,1))*100);
+        div.innerHTML = `<div class="stat-label">${r.label}</div><div class="bar"><span style="width:${pct}%"></span></div><div class="stat-value">${fmtMoney(r.val)}</div>`;
+        wrap.appendChild(div);
+      });
+    };
+
+    const finRenderChecklist = () => {
+      const wrap = document.getElementById("fin-checklist");
+      wrap.innerHTML = "";
+      const lr = finLastReceita();
+      if (!lr) { wrap.innerHTML = '<span class="stat-sub">Registre uma receita para checklist.</span>'; return; }
+      if (!lr.checklist) lr.checklist = {};
+      const tasks = [
+        { key: "dizimo", label: "Separar dízimo", offensiva: true },
+        { key: "oferta", label: "Registrar oferta", offensiva: true },
+        { key: "reserva", label: "Reserva emergência" },
+        { key: "moderado", label: "Invest. moderado" },
+        { key: "arriscado", label: "Invest. arriscado" },
+      ];
+      tasks.forEach(t => {
+        const btn = document.createElement("button");
+        const done = lr.checklist[t.key];
+        btn.textContent = done ? `✔ ${t.label}` : t.label;
+        btn.className = done ? "btn" : "btn-ghost";
+        btn.onclick = () => { lr.checklist[t.key] = !done; persistFin(); finRenderChecklist(); };
+        wrap.appendChild(btn);
+      });
+    };
+
+    const finLabel = (p) => p === "hoje" ? "Hoje" : p === "7d" ? "Últimos 7 dias" : p === "mes" ? "Mês" : "Geral";
+
+    const finRenderAll = () => {
+      finRenderResumo();
+      finRenderTable();
+      finRenderDistUltimo();
+      finRenderDistAcumulada();
+      finRenderChecklist();
+    };
+
+    const finAdd = () => {
+      const valor = Number(document.getElementById("fin-valor").value);
+      const tipo = document.getElementById("fin-tipo").value;
+      const data = document.getElementById("fin-data").value || finToday();
+      const desc = document.getElementById("fin-desc").value.trim();
+      if (!valor || valor <= 0) { alert("Informe um valor válido."); return; }
+      finState.lancamentos.push({ id: `fin-${Date.now()}`, valor, tipo, data, desc });
+      persistFin();
+      finRenderAll();
+      finClearForm();
+    };
+
+    const finClearForm = () => {
+      document.getElementById("fin-valor").value = "";
+      document.getElementById("fin-desc").value = "";
+      document.getElementById("fin-data").value = finToday();
+      document.getElementById("fin-tipo").value = "gasto";
+    };
+
+    const finReset = () => {
+      const ok = confirm("Apagar todos os lançamentos financeiros?");
+      if (!ok) return;
+      finState = { lancamentos: [] };
+      persistFin();
+      finRenderAll();
+    };
+
+    const finResetChecklist = () => {
+      const lr = finLastReceita();
+      if (!lr) return;
+      lr.checklist = {};
+      persistFin();
+      finRenderChecklist();
+    };
+
+    const finBindPeriodButtons = () => {
+      const btns = Array.from(document.querySelectorAll(".fin-period"));
+      btns.forEach(btn => {
+        btn.onclick = () => {
+          finPeriod = btn.dataset.period || "geral";
+          btns.forEach(b => b.classList.toggle("active", b === btn));
+          finRenderAll();
+        };
+      });
+      btns.forEach(b => b.classList.toggle("active", (b.dataset.period || "") === finPeriod));
+    };
+
+    // Sono
+    const fmtHours = (h) => `${Number(h||0).toFixed(1)}h`;
+
+    const sleepTodayKey = (d = new Date()) => d.toISOString().slice(0,10);
+
+    const saveSleep = () => {
+      const hours = Number(document.getElementById("sleep-hours").value);
+      const date = document.getElementById("sleep-date").value || sleepTodayKey();
+      if (!hours || hours < 0) { alert("Informe horas válidas."); return; }
+      state.sleep.entries[date] = hours;
+      persist();
+      renderSleep();
+    };
+
+    const clearSleepForm = () => {
+      document.getElementById("sleep-hours").value = "";
+      document.getElementById("sleep-date").value = sleepTodayKey();
+    };
+
+    const sleepArray = () => Object.entries(state.sleep.entries || {}).map(([date, hours]) => ({ date, hours: Number(hours) })).sort((a,b)=> new Date(b.date) - new Date(a.date));
+
+    const avg = (items) => items.length ? items.reduce((s,i)=>s+i.hours,0)/items.length : 0;
+
+    const renderSleepHistory = () => {
+      const wrap = document.getElementById("sleep-history");
+      wrap.innerHTML = "";
+      const items = sleepArray().slice(0,7);
+      if (!items.length) { wrap.innerHTML = '<span class="stat-sub">Sem registros ainda.</span>'; return; }
+      items.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "bar-row";
+        const label = document.createElement("div");
+        label.className = "stat-label";
+        label.textContent = new Date(item.date).toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit" });
+        const bar = document.createElement("div");
+        bar.className = "sleep-bar";
+        const span = document.createElement("span");
+        span.style.width = `${Math.min(100, (item.hours/10)*100)}%`;
+        bar.appendChild(span);
+        const val = document.createElement("div");
+        val.className = "stat-value";
+        val.textContent = fmtHours(item.hours);
+        row.append(label, bar, val);
+        wrap.appendChild(row);
+      });
+    };
+
+    const renderSleepWeekBars = () => {
+      const wrap = document.getElementById("sleep-week-bars");
+      if (!wrap) return;
+      wrap.innerHTML = "";
+      const items = sleepArray().filter((_, idx) => idx < 7).sort((a,b)=> new Date(a.date) - new Date(b.date));
+      if (!items.length) { wrap.innerHTML = '<span class="stat-sub">Sem registros na semana.</span>'; return; }
+      const maxH = Math.max(...items.map(i=>i.hours), 1);
+      items.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "bar-row";
+        row.innerHTML = `
+          <div class="stat-label">${new Date(item.date).toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit" })}</div>
+          <div class="sleep-bar"><span style="width:${Math.min(100, (item.hours/Math.max(maxH,1))*100)}%"></span></div>
+          <div class="stat-value">${fmtHours(item.hours)}</div>
+        `;
+        wrap.appendChild(row);
+      });
+    };
+
+    const renderSleepStats = () => {
+      const arr = sleepArray();
+      const now = new Date();
+      const last7 = arr.filter(i => (now - new Date(i.date)) / 86400000 <= 6);
+      const last30 = arr.filter(i => (now - new Date(i.date)) / 86400000 <= 29);
+      const avg7 = avg(last7);
+      const avg30 = avg(last30);
+      document.getElementById("sleep-avg-7").textContent = fmtHours(avg7);
+      document.getElementById("sleep-avg-30").textContent = fmtHours(avg30);
+      document.getElementById("sleep-bar-7").style.width = `${Math.min(100, (avg7/10)*100)}%`;
+      document.getElementById("sleep-bar-30").style.width = `${Math.min(100, (avg30/10)*100)}%`;
+
+      const goodThreshold = 7.5;
+      const goodDays = last7.filter(i => i.hours >= goodThreshold);
+      const grade = avg7 >= 7.5 ? "Muito bom" : avg7 >= 6.5 ? "Ok" : "Crítico";
+      const gradeEl = document.getElementById("sleep-grade");
+      const goodEl = document.getElementById("sleep-good-count");
+      if (gradeEl) gradeEl.textContent = grade;
+      if (goodEl) goodEl.textContent = `${goodDays.length}/7`;
+
+      if (!state.sleep.achievements) state.sleep.achievements = [];
+      goodDays.forEach(d => {
+        if (!state.sleep.achievements.find(a => a.date === d.date)) {
+          state.sleep.achievements.push({ date: d.date, hours: d.hours });
+        }
+      });
+      state.sleep.achievements = state.sleep.achievements.sort((a,b)=> new Date(b.date) - new Date(a.date)).slice(0, 50);
+      persist();
+    };
+
+    const metaByTitle = (title) => state.metas.find(m => m.title.toLowerCase() === title.toLowerCase());
+
+    const toggleMorning = (title) => {
+      const meta = metaByTitle(title);
+      if (!meta) return alert(`Meta "${title}" não encontrada.`);
+      setStatus(meta.id, "concluida");
+    };
+
+    const renderMorningStatus = () => {
+      const wrap = document.getElementById("sleep-metas-status");
+      wrap.innerHTML = "";
+      const metas = [metaByTitle("Devocional"), metaByTitle("Alongamento")].filter(Boolean);
+      ensureDayEntries(todayKey());
+      const entries = state.entries[todayKey()] || {};
+      metas.forEach(meta => {
+        const st = entries[meta.id];
+        const pill = document.createElement("span");
+        pill.className = "pill";
+        pill.textContent = `${meta.title}: ${st === "concluida" ? "Concluído" : st === "pendente" || !st ? "Pendente" : st === "anulada" ? "Anulada" : "Outro"}`;
+        wrap.appendChild(pill);
+      });
+    };
+
+    const renderSleep = () => {
+      renderSleepStats();
+      renderSleepWeekBars();
+      renderSleepHistory();
+    };
+
+    // Finanças
+    document.getElementById("fin-salvar").onclick = finAdd;
+    document.getElementById("fin-limpar").onclick = finClearForm;
+    document.getElementById("fin-reset").onclick = finReset;
+    document.getElementById("fin-reset-check").onclick = finResetChecklist;
+    finBindPeriodButtons();
+    finClearForm();
+    finRenderAll();
+
+    document.getElementById("sleep-save").onclick = saveSleep;
+    document.getElementById("sleep-clear").onclick = clearSleepForm;
+    clearSleepForm();
+
+    setupWeekdayButtons();
+    ensureDayEntries(todayKey());
+    applyGreeting();
+    updateSaveStatus(true);
+    startTimer();
+    render();
+
+    document.getElementById("detail-close").onclick = () => {
+      document.getElementById("meta-detail-modal").style.display = "none";
+    };
+    document.getElementById("meta-detail-modal").onclick = (e) => {
+      if (e.target.id === "meta-detail-modal") document.getElementById("meta-detail-modal").style.display = "none";
+    };
+  </script>
+</body>
+</html>

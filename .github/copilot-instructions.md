@@ -1,0 +1,13 @@
+- [x] Verify that the copilot-instructions.md file in the .github directory is created.
+- [x] Clarify Project Requirements — site estático inicial para a página de metas.
+- [x] Scaffold the Project — estrutura criada em index.html.
+- [x] Customize the Project — página de metas pronta (hero, objetivos, passos e KPIs).
+- [x] Install Required Extensions — nenhuma necessária para HTML estático.
+- [x] Compile the Project — não aplicável; abrir index.html direto.
+- [x] Create and Run Task — não necessário nesta entrega.
+- [x] Launch the Project — abrir index.html no navegador ou via Live Server.
+- [x] Ensure Documentation is Complete — README criado e instruções limpas.
+
+- Work through each checklist item systematically.
+- Keep communication concise and focused.
+- Follow development best practices.
